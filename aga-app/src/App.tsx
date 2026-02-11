@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <p>New Aga app</p>
+        <p>Hello world!</p>
     </>
   )
 }
