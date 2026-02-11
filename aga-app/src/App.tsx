@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <p>Aga app</p>
+      <p>Aga Jopa app</p>
     </>
   )
 }
