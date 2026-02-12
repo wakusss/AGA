@@ -1,13 +1,7 @@
-import Login from "./components/login/Login.tsx";
-
-import './App.css'
+import "./App.css";
 
 function App() {
-  return (
-    <>
-       <Login />
-    </>
-  )
+  return <></>;
 }
 
-export default App
+export default App;
