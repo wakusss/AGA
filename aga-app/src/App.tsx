@@ -1,13 +1,12 @@
-import Login from "./components/login/Login.tsx";
+import Login from "../src/pages/Login.tsx";
+import Test from "./components/test/Test.tsx";
 
-import './App.css'
+import "./App.css";
 
-function App() {
+export default function App() {
   return (
     <>
-       <Login />
+      <Login />
     </>
-  )
+  );
 }
-
-export default App
