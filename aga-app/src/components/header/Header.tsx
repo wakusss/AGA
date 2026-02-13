@@ -4,7 +4,9 @@ import NavBar from "../nav-bar/NavBar";
 export default function Header() {
   return (
     <>
-      <NavBar />
+      <header className="sticky top-0 z-50">
+        <NavBar />
+      </header>
     </>
   );
 }

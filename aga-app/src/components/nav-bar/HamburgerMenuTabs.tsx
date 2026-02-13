@@ -1,5 +1,3 @@
-import React from "react";
-
 interface HamburgerMenuTabsProps {
   href: string;
   label: string;
