@@ -8,7 +8,7 @@ interface TopNavTabsProps {
 export default function TopNavTabs(props: TopNavTabsProps) {
   return (
     <>
-      <li className="text-xl text-center flex items-center">
+      <li className="text-xl text-center md:flex">
         <a href={props.href}>{props.label}</a>
       </li>
     </>
