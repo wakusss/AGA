@@ -1,4 +1,5 @@
 import React from "react";
+import TopNavTabs from "./TopNavTabs";
 
 export default function NavBar() {
   return (
@@ -9,16 +10,10 @@ export default function NavBar() {
             <a href="/feed">AGA Chat</a>
           </h1>
         </div>
-        <ul className="grid grid-cols-3">
-          <li className="text-xl text-center flex items-center">
-            <a href="/feed">Feed</a>
-          </li>
-          <li className="text-xl text-center flex items-center">
-            <a href="/profile">Profile</a>
-          </li>
-          <li className="text-xl text-center flex items-center">
-            <a href="/settings">Settings</a>
-          </li>
+        <ul className="flex grid grid-cols-3">
+          <TopNavTabs href="/feed" label="Feed" />
+          <TopNavTabs href="/profile" label="Profile" />
+          <TopNavTabs href="/settings" label="Settings" />
         </ul>
       </nav>
     </>
