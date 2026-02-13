@@ -1,9 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import TopNavTabs from "./TopNavTabs";
+import HamburgerMenuTabs from "./HamburgerMenuTabs";
 
 export default function NavBar() {
-  const [isOpenHamburgerButton, setIsOpenHamburgerButton] = useState(false);
+  const [isOpenHamburgerMenuButton, setIsOpenHamburgerMenuButton] =
+    useState(false);
   return (
     <>
       <nav className="bg-purple-700 text-white p-7">
@@ -25,13 +27,25 @@ export default function NavBar() {
             </div>
             {/* Mobile Links (Hamburger menu) */}
             <button
-              className="text-6xl max-[800px]:block hidden"
-              onClick={() => setIsOpenHamburgerButton(!isOpenHamburgerButton)}
+              className="text-6xl max-[800px]:block hidden active:text-gray-300 "
+              onClick={() =>
+                setIsOpenHamburgerMenuButton(!isOpenHamburgerMenuButton)
+              }
             >
               ☰
             </button>
           </div>
         </div>
+
+        {isOpenHamburgerMenuButton && (
+          <div className="min-[900px]:hidden my-5">
+            <ul className="grid grid-cols-1">
+              <HamburgerMenuTabs href="/feed" label="Feed" />
+              <HamburgerMenuTabs href="/profile" label="Profile" />
+              <HamburgerMenuTabs href="/settings" label="Settings" />
+            </ul>
+          </div>
+        )}
       </nav>
     </>
   );
