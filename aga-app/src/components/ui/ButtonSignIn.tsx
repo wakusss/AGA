@@ -1,10 +1,20 @@
 interface SignInButtonProps {
   className?: string;
+  email?: string;
+  password?: string;
 }
 
 export default function ButtonSignIn(props: SignInButtonProps) {
+  function handleClick() {
+    console.log(props.email + " " + props.password);
+  }
+
   return (
-    <button className={`${props.className || ""}`} value={"Sign In"}>
+    <button
+      className={`border-1 ${props.className || ""}`}
+      value={"Sign In"}
+      onClick={handleClick}
+    >
       Sign In
     </button>
   );

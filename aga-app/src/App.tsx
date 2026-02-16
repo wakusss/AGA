@@ -1,12 +1,10 @@
-import Login from "../src/pages/Login.tsx";
-import Test from "./components/test/Test.tsx";
+import LoginForm from "./components/login/LoginForm.tsx";
 
 import "./App.css";
-
 export default function App() {
   return (
     <>
-      <Login />
+      <LoginForm />
     </>
   );
 }
