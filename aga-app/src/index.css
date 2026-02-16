@@ -3,3 +3,7 @@
 * {
   font-family: "Roboto Mono", monospace;
 }
+
+:root {
+  --text-color-light-mode: #2681f3;
+}

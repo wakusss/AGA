@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import TopNavTabs from "./TopNavTabs";
 import HamburgerMenuTabs from "./HamburgerMenuTabs";
@@ -8,7 +7,7 @@ export default function NavBar() {
     useState(false);
   return (
     <>
-      <nav className="bg-white text-[#091B2D] p-5">
+      <nav className="bg-white p-5">
         <div className="mx-auto max-w-7xl">
           <div className="flex h-16 items-center justify-between gap-4 sm:gap-10">
             {/* Logo */}
@@ -24,7 +23,7 @@ export default function NavBar() {
 
             {/* Desktop Links */}
             <div className="w-full hidden min-[900px]:block items-center">
-              <ul className="grid grid-cols-3 justify-items-center flex text-[#2681F3] active:brightness-90 hover:brightness-110 hover:saturate-125 transition-all duration-150">
+              <ul className="grid grid-cols-3 justify-items-center">
                 <TopNavTabs href="/feed" label="Feed" />
                 <TopNavTabs href="/profile" label="Profile" />
                 <TopNavTabs href="/settings" label="Settings" />
@@ -32,7 +31,7 @@ export default function NavBar() {
             </div>
             {/* Mobile Links (Hamburger menu) */}
             <button
-              className="text-6xl text-[#2681F3] max-[900px]:block hidden active:brightness-90 transition-all duration-150 "
+              className="text-6xl text-[var(--text-color-light-mode)] max-[900px]:block hidden active:brightness-90 transition-all duration-150 "
               onClick={() =>
                 setIsOpenHamburgerMenuButton(!isOpenHamburgerMenuButton)
               }
