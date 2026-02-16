@@ -126,7 +126,7 @@ Typy treści w MVP:
 
 **6.1 Proponowana architektura**
 
-- Backend: Kotlin + Spring Boot 3
+- Backend: Kotlin + Spring Boot 4
 - Frontend: React 18 + TypeScript + Vite
 - Baza danych: PostgreSQL
 
