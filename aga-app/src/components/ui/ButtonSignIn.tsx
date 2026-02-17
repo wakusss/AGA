@@ -11,7 +11,7 @@ export default function ButtonSignIn(props: SignInButtonProps) {
 
   return (
     <button
-      className={`border-1 ${props.className || ""}`}
+      className={`border-1 m-2${props.className || ""}`}
       value={"Sign In"}
       onClick={handleClick}
     >
