@@ -21,18 +21,34 @@ repositories {
 }
 
 dependencies {
-//	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	// Spring Boot starters
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+
+	// Kotlin
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("tools.jackson.module:jackson-module-kotlin")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")        // иногда требуется явно
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+	// DATABASE
 //	runtimeOnly("org.postgresql:postgresql")
-//	runtimeOnly("com.h2database:h2")
-//	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+	testRuntimeOnly("com.h2database:h2")
+	runtimeOnly("com.h2database:h2")
+
+	// JWT
+	implementation("io.jsonwebtoken:jjwt-api:0.13.0")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.13.0")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.13.0")
+
+	// Dev & Test
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
 
 
 }

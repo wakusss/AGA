@@ -18,7 +18,11 @@ interface PostRepository {
 
 @Repository
 class InMemoryPostRepository : PostRepository {
-    val posts = mutableListOf<PostDto>()
+    val posts = mutableListOf<PostDto>(
+        PostDto(id = 1, title = "Первый пост", content = "Привет, мир!"),
+        PostDto(id = 2, title = "Kotlin крут", content = "Почему все переходят на Kotlin?"),
+        PostDto(id = 3, title = "Spring Boot 4", content = "Что нового в 2025–2026")
+    )
 
     override fun createPost(dto: PostDto): PostDto {
         posts.add(dto)
