@@ -3,7 +3,6 @@
 **Status**: Draft / In Review  
 **Data utworzenia**: 2026-02-11  
 **Wersja**: 1.0  
-**Powiązany projekt**: AGA Chat – Społeczność dla osób mieszkających za granicą
 
 ## 1. Wstęp / Przegląd
 
@@ -126,7 +125,7 @@ Typy treści w MVP:
 
 **6.1 Proponowana architektura**
 
-- Backend: Kotlin + Spring Boot 3
+- Backend: Kotlin + Spring Boot 4
 - Frontend: React 18 + TypeScript + Vite
 - Baza danych: PostgreSQL
 

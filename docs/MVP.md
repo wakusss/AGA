@@ -5,7 +5,7 @@
 **Data utworzenia** : 12 lutego 2026  
 **Wersja** : 1.0  
 **Zakres** : wyłącznie funkcje, które MUSZĄ być zrealizowane w pierwszej wersji produkcyjnej (MVP)  
-**Cel MVP** : szybka walidacja koncepcji, pozyskanie pierwszych 500–1500 realnych użytkowników, zebranie feedbacku i danych o zachowaniach
+**Cel MVP** : szybka walidacja koncepcji
 
 ## 1. Core loop użytkownika
 
@@ -43,7 +43,7 @@
 - Infinite scroll / lazy loading
 - Każdy post pokazuje: autora, miasto, czas, treść, zdjęcia (do 4 widocznych miniatur), liczbę like’ów i komentarzy
 
-### 2.4 Tworzenie postów – dokładnie 5 typów
+### 2.4 Tworzenie postów – dokładnie 4 typów
 
 1. Zwykły post: tekst (max 2000 znaków) + zdjęcia (max 10, kompresja do WebP)
 2. Ankieta: 1 pytanie + 2–4 opcje odpowiedzi
@@ -86,7 +86,7 @@
 
 ## 4. Założenia techniczne MVP
 
-- Backend: Kotlin + Spring Boot 3
+- Backend: Kotlin + Spring Boot 4
 - Frontend: React 18 + TypeScript + Vite
 - Baza: PostgreSQL
 - Deployment: Docker
