@@ -1,4 +1,14 @@
 {
+  "name": "aga-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "class-variance-authority": "^0.7.1",
@@ -13,7 +23,9 @@
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
-    "@types/react": "^19.2.13",
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.24",
