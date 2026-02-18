@@ -1,3 +1,4 @@
+import { handleSubmitLoginData } from "../../lib/utils.ts";
 interface SignInButtonProps {
   className?: string;
   email?: string;
@@ -5,15 +6,17 @@ interface SignInButtonProps {
 }
 
 export default function ButtonSignIn(props: SignInButtonProps) {
-  function handleClick() {
-    console.log(props.email + " " + props.password);
-  }
+  const propsData = { email: props.email, password: props.password };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    handleSubmitLoginData(e, propsData);
+  };
 
   return (
     <button
       className={`border-1 m-2${props.className || ""}`}
       value={"Sign In"}
-      onClick={handleClick}
+      onClick={() => handleSubmit}
     >
       Sign In
     </button>
