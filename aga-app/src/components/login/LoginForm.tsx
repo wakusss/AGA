@@ -9,13 +9,14 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   return (
     <>
-      <div className=""></div>
-      <div>
-        <p>Sign In</p>
-        <InputEmail email={email} setEmail={setEmail} />
-        <InputPassword password={password} setPassword={setPassword} />
-        <ButtonSignIn email={email} password={password} />
-      </div>
+      <img
+        src="../../src/assets/logo.jpg"
+        alt="AGA Chat Logo"
+        className="h-10 sm:h-14 lg:h-auto w-auto object-contain shrink-0 max-w-[220px]"
+      />
+      <InputEmail email={email} setEmail={setEmail} />
+      <InputPassword password={password} setPassword={setPassword} />
+      <ButtonSignIn email={email} password={password} />
     </>
   );
 }
