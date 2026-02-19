@@ -1,30 +1,26 @@
-interface InputEmailProps {
-  validation?: boolean;
+interface InputLastNameProps {
   className?: string;
-  email: string;
-  setEmail: (value: string) => void;
+  lastName: string;
+  setLastName: (value: string) => void;
 }
-
-export default function Input(props: InputEmailProps) {
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    props.setEmail(event.target.value);
-  }
-
+export default function InputLastName(props: InputLastNameProps) {
   return (
     <>
       <div className="grid grid-cols-1">
         <label
-          htmlFor="email"
+          htmlFor="lastName"
           className="text-[var(--color-text-primary-light-mode)] text-xl tracking-wide font-medium ml-2"
         >
-          Email:
+          Last Name:
         </label>
         <input
-          type="email"
-          placeholder="you@example.com"
+          type="text"
+          value={props.lastName}
+          onChange={(e) => props.setLastName(e.target.value)}
+          placeholder="Last Name"
           className={`md:w-60 rounded-lg m-2 p-3 placeholder:italic text-base tracking-wide text-[var(--color-text-primary-light-mode)] placeholder:text-[var(--color-primary-light-mode)]/35 border-[1.5px] border-[var(--color-primary-light-mode)] focus:outline-none active:brightness-90 hover:brightness-130 hover:saturate-125 transition-all duration-150 shadow-lg ${props.className || ""}`}
-          onChange={handleChange}
-          value={props.email}
+          autoComplete="family-name"
+          required
         ></input>
       </div>
     </>

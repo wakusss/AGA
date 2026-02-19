@@ -20,7 +20,7 @@ export const handleSubmitLoginData = async (
   };
 
   try {
-    const response = await fetch("http://localhost:8080/api/auth/register", {
+    const response = await fetch("http://localhost:8080/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,8 +35,8 @@ export const handleSubmitLoginData = async (
       );
     }
     const result = await response.json();
-    console.log("Ответ сервера:", result);
+    console.log("Ответ сервера:", result.body);
   } catch (err) {
-    console.error(err);
+    console.log(err);
   }
 };

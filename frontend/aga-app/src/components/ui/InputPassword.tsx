@@ -1,7 +1,7 @@
 interface InputEmailProps {
   className?: string;
   password: string;
-  setPassword: React.Dispatch<React.SetStateAction<string>>;
+  setPassword: (value: string) => void;
 }
 
 export default function InputPassword(props: InputEmailProps) {
