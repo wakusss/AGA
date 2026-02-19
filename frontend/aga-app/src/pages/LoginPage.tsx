@@ -21,6 +21,12 @@ export default function LoginPage() {
         </div>
         <div className="w-1/3 min-h-screen flex flex-col justify-center items-center">
           <LoginForm />
+          <a
+            href="/signup"
+            className="text-[var(--color-primary-light-mode)] active:brightness-90 hover:brightness-110 hover:saturate-125 transition-all duration-150"
+          >
+            Don't have an account?
+          </a>
         </div>
       </main>
     </>

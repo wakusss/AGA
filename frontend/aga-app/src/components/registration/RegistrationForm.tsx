@@ -26,6 +26,11 @@ export default function RegistrationForm(props: RegistrationFormProps) {
 
   return (
     <>
+      <img
+        src="../../src/assets/logo.jpg"
+        alt="AGA Chat Logo"
+        className="h-10 sm:h-14 lg:h-auto w-auto object-contain shrink-0 max-w-[220px]"
+      />
       <InputName name={props.formData.name} setName={setField("name")} />
       <InputLastName
         lastName={props.formData.secondName}
