@@ -7,7 +7,7 @@ import InputLogin from "../components/registration/InputLogin";
 import InputConfirmPassword from "../components/registration/InputConfirmPassword";
 import { validateEmail, validatePassword } from "../components/utils/util.tsx";
 import ErrorMessage from "../components/widgets/ErrorMessage";
-
+import PostCard from "@/components/posts/Post.tsx";
 import "./Register.css";
 
 function Register() {
@@ -123,6 +123,15 @@ function Register() {
           />
         </div>
       )}
+      <PostCard
+        post={{
+          author: { name: "John Pork", avatar: "" },
+          content: "This is a sample post.",
+          createAt: new Date(),
+          image:
+            "https://tengrinews.kz/userdata/news/2025/news_575722/thumb_xms/photo_517067.jpg.webp",
+        }}
+      />
     </div>
   );
 }
