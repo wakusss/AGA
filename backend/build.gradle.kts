@@ -32,6 +32,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")        // иногда требуется явно
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+
 	// DATABASE
 //	runtimeOnly("org.postgresql:postgresql")
 	testRuntimeOnly("com.h2database:h2")
@@ -48,7 +49,9 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+	testImplementation("io.mockk:mockk:1.13.13")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 
 
 }
