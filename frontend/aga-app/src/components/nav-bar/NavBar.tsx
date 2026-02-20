@@ -31,7 +31,7 @@ export default function NavBar() {
             </div>
             {/* Mobile Links (Hamburger menu) */}
             <button
-              className="text-6xl text-[var(--text-color-light-mode)] max-[900px]:block hidden active:brightness-90 transition-all duration-150 "
+              className="text-6xl text-[var(--color-primary-light-mode)] max-[900px]:block hidden active:brightness-90 transition-all duration-150 "
               onClick={() =>
                 setIsOpenHamburgerMenuButton(!isOpenHamburgerMenuButton)
               }
