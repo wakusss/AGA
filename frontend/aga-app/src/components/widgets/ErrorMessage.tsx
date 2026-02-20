@@ -34,6 +34,7 @@ export default function ErrorMessage({
         zIndex: "100",
         position: "fixed",
         right: "0",
+        top: "0",
       }}
     >
       {type === "success" ? "✅" : "⚠️"} {message}

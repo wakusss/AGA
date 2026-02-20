@@ -6,18 +6,26 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const handleSubmitLoginData = async (
-  e: { preventDefault: () => void },
-  props: {
+  e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
+  {
+    email = "",
+    password = "",
+    onError,
+    onLoading,
+  }: {
     email?: string;
     password?: string;
+    onError?: (message: string) => void;
+    onLoading?: (isLoading: boolean) => void;
   },
 ) => {
   e.preventDefault();
-
   const data = {
-    email: props.email,
-    password: props.password,
+    email,
+    password,
   };
+
+  onLoading?.(true);
 
   try {
     const response = await fetch("http://localhost:8080/api/auth/login", {
@@ -27,16 +35,21 @@ export const handleSubmitLoginData = async (
       },
       body: JSON.stringify(data),
     });
+    const responseData = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.message ? `Ошибка ${response.status}` : "Сетевая ошибка",
-      );
+      const errorMessage = responseData.message || "Unknown error";
+
+      onError?.(errorMessage);
+
+      if (response.status === 401) onError?.("Invalid email or password!");
+
+      return;
     }
-    const result = await response.json();
-    console.log("Ответ сервера:", result.body);
   } catch (err) {
-    console.log(err);
+    const message = "The server is not responding";
+    onError?.(message);
+  } finally {
+    onLoading?.(false);
   }
 };
