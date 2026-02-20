@@ -102,9 +102,6 @@ components:
         id:
           type: integer
           format: int64
-        email:
-          type: string
-          format: email
         username:
           type: string
           nullable: true
