@@ -1,6 +1,5 @@
 package com.aga.agaChat.controllers
 
-import com.aga.agaChat.models.dto.AuthResponse
 import com.aga.agaChat.models.dto.ErrorResponse
 import com.aga.agaChat.models.dto.LoginRequest
 import com.aga.agaChat.models.dto.RegisterRequest
