@@ -24,33 +24,33 @@ class AuthService(
      */
     @Transactional
     fun register(req: RegisterRequest): AuthResponse {
-        // 1. Check, if user with this email already exists
+
+        // Check, if user with this email already exists
         if (userRepository.existsByEmail(req.email)) {
             throw BadCredentialsException("User with Email ${req.email} already exists")
         }
 
-        // 2. Hash password
+        // Hash password
         val hashedPassword = passwordEncoder.encode(req.password)
 
-        // 3. Create User Entity
+        // Create User Entity
         val user = User(
             email = req.email,
             password = hashedPassword,
-            role = Role.USER   // user as a default
+            role = Role.USER,
         )
 
-        // 4. Save into db
+        // Save into db
         val savedUser = userRepository.save(user)
 
-        // 5. Generate JWT-token
+        // Generate JWT-token
         val token = jwtService.generateToken(savedUser)
 
-        // 6. Create response
+        // Create response
         return AuthResponse(
             token = token,
             userId = savedUser.id,
-            email = savedUser.email,
-            message = "OK"
+            email = savedUser.email
         )
     }
 
