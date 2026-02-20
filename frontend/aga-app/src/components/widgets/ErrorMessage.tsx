@@ -31,6 +31,10 @@ export default function ErrorMessage({
         gap: "10px",
         minWidth: "260px",
         maxWidth: "380px",
+        zIndex: "100",
+        position: "fixed",
+        right: "0",
+        top: "0",
       }}
     >
       {type === "success" ? "✅" : "⚠️"} {message}

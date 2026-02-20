@@ -5,5 +5,6 @@
 }
 
 :root {
-  --text-color-light-mode: #2681f3;
+  --color-primary-light-mode: #2681f3;
+  --color-text-primary-light-mode: #091b2d;
 }

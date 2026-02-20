@@ -1,9 +1,8 @@
-import { useState } from "react";
-
 interface InputEmailProps {
+  validation?: boolean;
   className?: string;
   email: string;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  setEmail: (value: string) => void;
 }
 
 export default function Input(props: InputEmailProps) {

@@ -96,6 +96,19 @@ components:
           type: string
           format: date-time
 
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+          nullable: true
+        avatarUrl:
+          type: string
+          nullable: true
+
     PostCreateRequest:
       type: object
       required: [content]
@@ -130,7 +143,7 @@ components:
           type: string
           nullable: true
         author:
-          $ref: '#/components/schemas/UserProfile'
+          $ref: '#/components/schemas/Author'
         createdAt:
           type: string
           format: date-time
@@ -160,7 +173,7 @@ components:
         content:
           type: string
         author:
-          $ref: '#/components/schemas/UserProfile'
+          $ref: '#/components/schemas/Author'
         createdAt:
           type: string
           format: date-time
