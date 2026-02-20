@@ -5,10 +5,11 @@ import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/LoginPage.tsx";
 import Register from "./pages/Register.tsx";
+import Profile from "./pages/ProfilePage.tsx";
 
 const router = createBrowserRouter([
   // { path: "/", element: <App /> },
-  { path: "/profile", element: <App /> }, // temporary, will be replaced with actual profile page
+  { path: "/profile", element: <Profile /> }, // temporary, will be replaced with actual profile page
   { path: "/signin", element: <LoginPage /> },
   { path: "/signup", element: <Register /> },
 ]);
