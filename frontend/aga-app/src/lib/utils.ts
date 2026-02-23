@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import api from "./api";
+import { useAuthStore } from "@/stores/authStore";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -12,33 +14,28 @@ export const handleSubmitLoginData = async (
     password = "",
     onError,
     onLoading,
+    onSuccess,
   }: {
     email?: string;
     password?: string;
     onError?: (message: string) => void;
     onLoading?: (isLoading: boolean) => void;
+    onSuccess?: (isSuccess: boolean) => void;
   },
 ) => {
   e.preventDefault();
-  const data = {
-    email,
-    password,
-  };
-
   onLoading?.(true);
 
   try {
-    const response = await fetch("http://localhost:8080/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+    const response = await api.post("/auth/login", {
+      email,
+      password,
     });
-    const responseData = await response.json().catch(() => ({}));
+    console.log(response);
+    const data = response.data;
 
-    if (!response.ok) {
-      const errorMessage = responseData.message || "Unknown error";
+    if (!response.status.toString().startsWith("2")) {
+      const errorMessage = data.message || "Unknown error";
 
       onError?.(errorMessage);
 
@@ -46,9 +43,19 @@ export const handleSubmitLoginData = async (
 
       return;
     }
+
+    const token = data.token || data.accessToken;
+    if (token) {
+      const { setAccessToken } = useAuthStore.getState();
+      setAccessToken(token);
+      onSuccess?.(true);
+    } else {
+      onError?.("No token received");
+    }
+
+    onSuccess?.(true);
   } catch (err) {
-    const message = "The server is not responding";
-    onError?.(message);
+    console.log(err);
   } finally {
     onLoading?.(false);
   }

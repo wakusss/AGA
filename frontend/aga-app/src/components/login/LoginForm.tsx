@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import InputEmail from "../../components/ui/InputEmail";
 import InputPassword from "../../components/ui/InputPassword";
@@ -9,8 +10,9 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [successfulMsg, setSuccessfulMsg] = useState<string | null>(null);
+  const [isSuccess, setSuccess] = useState<boolean>();
   const [isLoading, setIsLoading] = useState<boolean>();
+  const navigate = useNavigate();
 
   const handleError = (msg: string) => {
     setErrorMsg(msg);
@@ -19,7 +21,11 @@ export default function LoginForm() {
 
   const handleSuccess = () => {
     setErrorMsg(null);
-    setTimeout(() => setErrorMsg(null), 5000);
+    setSuccess(true);
+    setTimeout(() => {
+      setSuccess(false);
+      navigate("/profile", { replace: true });
+    }, 1500);
   };
 
   return (
@@ -29,16 +35,22 @@ export default function LoginForm() {
         alt="AGA Chat Logo"
         className="h-10 sm:h-14 lg:h-auto w-auto object-contain shrink-0 max-w-[220px]"
       />
-      <InputEmail email={email} setEmail={setEmail} />
-      <InputPassword password={password} setPassword={setPassword} />
-      <ButtonSignIn
-        email={email}
-        password={password}
-        isLoading={isLoading}
-        setError={handleError}
-        setLoading={setIsLoading}
-      />
+      <form>
+        <InputEmail email={email} setEmail={setEmail} />
+        <InputPassword password={password} setPassword={setPassword} />
+        <ButtonSignIn
+          email={email}
+          password={password}
+          isLoading={isLoading}
+          setError={handleError}
+          setLoading={setIsLoading}
+          setSuccess={handleSuccess}
+        />
+      </form>
       {errorMsg && <ErrorMessage message={errorMsg} type="error" />}
+      {isSuccess && (
+        <ErrorMessage message={"Sign In completed!"} type="success" />
+      )}
     </>
   );
 }
