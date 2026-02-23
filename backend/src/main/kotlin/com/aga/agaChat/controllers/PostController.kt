@@ -1,7 +1,9 @@
 package com.aga.agaChat.controllers
 
+import com.aga.agaChat.models.dto.PagedPosts
 import com.aga.agaChat.models.dto.PostDto
-import com.aga.agaChat.repository.PostRepository
+import com.aga.agaChat.service.PostService
+import org.hibernate.query.SortDirection
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,35 +18,48 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/posts")
 class PostController (
-    private val postRepository: PostRepository,
+    private val postService: PostService,
 ){
-    val posts = mutableListOf<PostDto>()
-
+    // @Get
     @GetMapping
     fun loadPosts(
-        @RequestParam("q", required = false) query: String?,
-    ): List<PostDto>  {
-        return postRepository.filterPosts(query)
+        @RequestParam("query", required = false) query: String?,
+        @RequestParam("page", required = false) page: Int = 0,
+        @RequestParam("size", required = false) size: Int = 20,
+        @RequestParam("sortBy", required = false) sortBy: String?,
+        @RequestParam("sortDirection", required = false) sortDirection: String?,
+    ): PagedPosts {
+        return postService.getPosts(query, page, size, sortBy, sortDirection)
     }
 
+    @GetMapping("/{id}")
+    fun getPostById(
+        @PathVariable("id") id: Long
+    ): PostDto  {
+        return postService.getPostById(id)
+    }
+
+    // @Post
     @PostMapping
     fun createPost(
         @RequestBody dto: PostDto
     ): PostDto {
-        return postRepository.createPost(dto)
+        return postService.createPost(dto)
     }
 
+    // @Put
     @PutMapping
     fun updatePost(
         @RequestBody dto: PostDto
     ): PostDto {
-        return postRepository.updatePost(dto)
+        return postService.updatePost(dto)
     }
 
+    // @Delete
     @DeleteMapping("/{id}")
     fun deletePost(
         @PathVariable("id") id: Long
     ): ResponseEntity<*> {
-        return postRepository.removePost(id)
+        return postService.removePost(id)
     }
 }
