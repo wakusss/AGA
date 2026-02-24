@@ -35,18 +35,16 @@ export default function LoginForm() {
         alt="AGA Chat Logo"
         className="h-10 sm:h-14 lg:h-auto w-auto object-contain shrink-0 max-w-[220px]"
       />
-      <form>
-        <InputEmail email={email} setEmail={setEmail} />
-        <InputPassword password={password} setPassword={setPassword} />
-        <ButtonSignIn
-          email={email}
-          password={password}
-          isLoading={isLoading}
-          setError={handleError}
-          setLoading={setIsLoading}
-          setSuccess={handleSuccess}
-        />
-      </form>
+      <InputEmail email={email} setEmail={setEmail} />
+      <InputPassword password={password} setPassword={setPassword} />
+      <ButtonSignIn
+        email={email}
+        password={password}
+        isLoading={isLoading}
+        setError={handleError}
+        setLoading={setIsLoading}
+        setSuccess={handleSuccess}
+      />
       {errorMsg && <ErrorMessage message={errorMsg} type="error" />}
       {isSuccess && (
         <ErrorMessage message={"Sign In completed!"} type="success" />

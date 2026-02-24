@@ -5,7 +5,7 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// Интерсептор запросов — токен получаем динамически
+// Interceptor requests
 api.interceptors.request.use(
   async (config) => {
     const { useAuthStore } = await import("@/stores/authStore");
@@ -18,13 +18,13 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Интерсептор ответов — logout тоже динамически
+// Interceptor responses
 api.interceptors.response.use(
   (res) => res,
-  (err) => {
+  async (err) => {
     if (err.response?.status === 401) {
-      require("@/stores/authStore").useAuthStore.getState().logout();
-      // Можно добавить уведомление или редирект здесь
+      const { useAuthStore } = await import("@/stores/authStore");
+      useAuthStore.getState().logout();
     }
     return Promise.reject(err);
   },

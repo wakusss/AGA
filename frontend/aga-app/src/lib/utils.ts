@@ -23,7 +23,6 @@ export const handleSubmitLoginData = async (
     onSuccess?: (isSuccess: boolean) => void;
   },
 ) => {
-  e.preventDefault();
   onLoading?.(true);
 
   try {
@@ -31,18 +30,8 @@ export const handleSubmitLoginData = async (
       email,
       password,
     });
-    console.log(response);
+
     const data = response.data;
-
-    if (!response.status.toString().startsWith("2")) {
-      const errorMessage = data.message || "Unknown error";
-
-      onError?.(errorMessage);
-
-      if (response.status === 401) onError?.("Invalid email or password!");
-
-      return;
-    }
 
     const token = data.token || data.accessToken;
     if (token) {
@@ -50,12 +39,14 @@ export const handleSubmitLoginData = async (
       setAccessToken(token);
       onSuccess?.(true);
     } else {
-      onError?.("No token received");
+      throw new Error("No token received");
     }
-
-    onSuccess?.(true);
-  } catch (err) {
-    console.log(err);
+  } catch (err: any | Error) {
+    if (err.response?.status === 401) onError?.("Invalid email or password!");
+    if (err.response?.status === 400) onError?.("Please fill in all fields!");
+    if (err.response?.status === 500)
+      onError?.("Server error, please try again later!");
+    if (Error instanceof Error) onError?.(err.message);
   } finally {
     onLoading?.(false);
   }

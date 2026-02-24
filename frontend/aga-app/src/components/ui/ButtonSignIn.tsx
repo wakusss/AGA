@@ -33,7 +33,6 @@ export default function ButtonSignIn({
         "border-1 border-[var(--color-primary-light-mode)] rounded-lg m-2 p-2 px-5 text-[var(--color-text-primary-light-mode) hover:bg-[var(--color-primary-light-mode)]/50 active:bg-[var(--color-primary-light-mode)]/70"
       }
       onClick={handleSubmit}
-      type="submit"
       disabled={isLoading}
     >
       {!isLoading ? (
