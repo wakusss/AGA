@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 
 import PostCard from "../posts/Post";
@@ -40,7 +40,7 @@ const mockPosts: Post[] = [1, 2, 3].map((i) => ({
   author: mockProfile,
   content: `This is post number ${i}`,
   createAt: new Date("2022-01-15"),
-  image: `https://picsum.photos/seed/${i}/600/400` ,
+  image: `https://picsum.photos/seed/${i}/600/400`,
   likesCount: Math.floor(Math.random() * 100),
 }));
 
