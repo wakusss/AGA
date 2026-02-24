@@ -35,12 +35,12 @@ const mockProfile: userProfile = {
   location: "New York, USA",
   joinedAt: new Date("2022-01-15"),
 };
-const mockPosts: Post[] = [1, 2, 3].map((i) => ({
+const mockPosts: Post[] = [1, 2, 3, 4, 5, 6].map((i) => ({
   id: i,
   author: mockProfile,
   content: `This is post number ${i}`,
   createAt: new Date("2022-01-15"),
-  image: `https://picsum.photos/seed/${i}/600/400` ,
+  image: `https://picsum.photos/seed/${i}/600/400`,
   likesCount: Math.floor(Math.random() * 100),
 }));
 
@@ -57,10 +57,8 @@ export default function Profile() {
       {/* Nav bar */}
       <Header />
       <div className="min-h-screen bg-gray-50">
-        {/* Navbar предполагается уже выше в Layout или App */}
-
         <div className="max-w-4xl mx-auto pt-6 md:pt-8 pb-12 px-4 sm:px-6 lg:px-8">
-          {/* Профильная карточка */}
+          {/*Profile card */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
             <div className="p-6 md:p-8">
               <div className="flex items-start gap-5">
@@ -123,7 +121,7 @@ export default function Profile() {
               </div>
             )}
 
-            {/* Плейсхолдер для других табов (можно потом заполнить) */}
+            {/*Placeholder for other tabs */}
             {activeTab !== "posts" && (
               <div className="p-12 text-center text-gray-500">
                 {activeTab === "about" && "About section coming soon..."}

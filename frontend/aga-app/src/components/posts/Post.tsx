@@ -37,7 +37,7 @@ export default function PostCard({ post }: PostCardProps) {
   });
   return (
     <div className="bg-white rounded-xl shadow-md mb-4 border border-gray-200 max-w-2xl mx-auto">
-      {/* Шапка */}
+      {/* Header */}
       <div className="flex items-center gap-3 p-4">
         <img
           src={post.author.avatar}
@@ -51,7 +51,7 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
       </div>
 
-      {/* Текст поста */}
+      {/* Content */}
       <div className="px-4 pb-3 text-gray-800 whitespace-pre-line leading-relaxed">
         {post.content}
       </div>
@@ -95,7 +95,7 @@ export default function PostCard({ post }: PostCardProps) {
         </button>
       </div>
 
-      {/* Количество лайков теперь под кнопками, как в FB */}
+      {/* likes count*/}
       {post.likesCount && post.likesCount > 0 && (
         <div className="px-4 py-2 text-sm text-gray-500 border-t border-gray-100 bg-blue-50/30">
           {post.likesCount} {post.likesCount === 1 ? "like" : "likes"}
