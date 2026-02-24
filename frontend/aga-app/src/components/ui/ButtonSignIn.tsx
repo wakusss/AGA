@@ -5,6 +5,7 @@ interface SignInButtonProps {
   isLoading?: boolean;
   setError?: (msg: string) => void;
   setLoading?: (isLoading: boolean) => void;
+  setSuccess: (isSuccess: boolean) => void;
 }
 
 export default function ButtonSignIn({
@@ -13,6 +14,7 @@ export default function ButtonSignIn({
   isLoading,
   setError,
   setLoading,
+  setSuccess,
 }: SignInButtonProps) {
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -21,6 +23,7 @@ export default function ButtonSignIn({
       password,
       onError: setError,
       onLoading: setLoading,
+      onSuccess: () => setSuccess(true),
     });
   };
 
