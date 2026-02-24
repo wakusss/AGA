@@ -13,7 +13,7 @@ import RegistrationPage from "./pages/RegistrationPage.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/signin" replace />, // если зашёл на корень — на логин
+    element: <Navigate to="/signin" replace />,
   },
   {
     path: "/signin",
