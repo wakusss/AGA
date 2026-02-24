@@ -5,6 +5,7 @@ import InputEmail from "../../components/ui/InputEmail";
 import InputPassword from "../../components/ui/InputPassword";
 import ButtonSignIn from "../ui/ButtonSignIn";
 import ErrorMessage from "../widgets/ErrorMessage";
+import { useAuthStore } from "@/stores/authStore";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -22,10 +23,12 @@ export default function LoginForm() {
   const handleSuccess = () => {
     setErrorMsg(null);
     setSuccess(true);
+    useAuthStore.getState().checkAuth();
+    setSuccess(true);
+
     setTimeout(() => {
-      setSuccess(false);
       navigate("/profile", { replace: true });
-    }, 1500);
+    }, 1000);
   };
 
   return (

@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -9,11 +10,12 @@ import {
 } from "react-router-dom";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegistrationPage from "./pages/RegistrationPage.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/signin" replace />, // если зашёл на корень — на логин
+    element: <Navigate to="/signin" replace />,
   },
   {
     path: "/signin",
@@ -25,12 +27,18 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile",
-    element: <App />,
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/profile",
+        element: <App />,
+      },
+    ],
   },
   {
     path: "*",
     element: (
-      <div className="p-8 text-center text-2xl">404 — Страница не найдена</div>
+      <div className="p-8 text-center text-2xl">404 — Page Not Found</div>
     ),
   },
 ]);
