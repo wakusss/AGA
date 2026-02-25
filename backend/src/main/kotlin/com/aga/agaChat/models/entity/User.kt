@@ -1,5 +1,6 @@
 package com.aga.agaChat.models.entity
 
+import com.aga.agaChat.models.dto.UserDto
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -24,13 +25,13 @@ data class User(
     val password: String?,
 
     @Column(nullable = true)
-    val username: String? = null,
+    var username: String? = null,
 
     @Column(nullable = true)
-    val bio: String? = null,
+    var bio: String? = null,
 
     @Column(nullable = true)
-    val avatarUrl: String? = null,
+    var avatarUrl: String? = null,
 
     @Enumerated(EnumType.STRING)
     val role: Role = Role.USER,

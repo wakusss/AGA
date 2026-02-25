@@ -198,13 +198,12 @@ class PostServiceImpl(
         return userRepository.findByEmail(email)?.id
     }
 
-    private fun getCurrentUser(): User? {
+    private fun getCurrentUser(): User {
         val auth = SecurityContextHolder.getContext().authentication
-        if (auth == null || !auth.isAuthenticated) return null
-
+        if (auth == null || !auth.isAuthenticated) throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
         val email = auth.name
-
-        return userRepository.findByEmail(email)
+        val user = userRepository.findByEmail(email) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with email ${email} not found")
+        return user
     }
 
     private fun isLikedByUser(userId: Long, postId: Long): Boolean {
