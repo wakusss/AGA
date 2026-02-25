@@ -21,7 +21,7 @@ data class User(
     val email: String,
 
     @Column(nullable = false)
-    val password: String?,           // хранится захэшированный BCrypt
+    val password: String?,
 
     @Column(nullable = true)
     val username: String? = null,
