@@ -10,7 +10,7 @@ export default function Feed() {
     <div className="min-h-screen bg-gray-50">
       <NavBar />
       {/* SearchBar */}
-      <SearchBar placeholder="Search posts....." />
+      <SearchBar />
       {/* Content */}
       <div className="mt-16">
         {mockPosts.map((post) => (

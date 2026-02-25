@@ -1,5 +1,5 @@
 import { type Post } from '../types/Post';
-import { mockProfile } from './profile';
+import { mockProfile } from './Profile';
 
 export const mockPosts: Post[] = [1, 2, 3, 4, 5, 6].map((i) => ({
   id: i,
