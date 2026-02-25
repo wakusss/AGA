@@ -10,11 +10,10 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import java.util.Date
 
 @Entity
-@Table(name = "Posts")
-data class Post(
+@Table(name = "User_Post_Likes")
+data class UserPostLike(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -24,24 +23,21 @@ data class Post(
         name = "user_id",
         nullable = false,
         foreignKey = ForeignKey(
-            name = "fk_post_user_id"
+            name = "fk_likes_user_id"
         )
     )
     val user: User,
 
-    @Column(nullable = true)
-    val imageUrl: String? = null,
-
-    @Column(nullable = true)
-    val content: String? = null,
-
-    @Column(nullable = true)
-    val likesCount: Int = 0,
-
-    @Column(nullable = true)
-    val commentsCount: Int = 0,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "post_id",
+        nullable = false,
+        foreignKey = ForeignKey(
+            name = "fk_likes_post_id"
+        )
+    )
+    val post: Post,
 
     @Column(nullable = false)
-    val createdAt: Date = Date(),
-
-)
+    val liked: Boolean = false,
+    )

@@ -1,5 +1,7 @@
 package com.aga.agaChat.models.dto
 
+import java.util.Date
+
 data class AuthorDto(
     val id: Long,
     val username: String,
@@ -11,10 +13,22 @@ data class PostDto (
     val content:String,
     val imageUrl:String,
     val author:AuthorDto,
-    val createdAt:String,
+    val createdAt: Date? = Date(),
     val likesCount:Int,
     val commentsCount:Int,
     val isLikedByCurrentUser:Boolean,
+)
+
+data class CreatePostDto(
+    val content:String,
+    val imageUrl:String
+)
+
+data class UpdatePostDto(
+    val id:Long,
+    val content:String,
+    val imageUrl:String,
+
 )
 
 data class PagedPosts(
