@@ -1,6 +1,7 @@
 package com.aga.agaChat.controllers
 
 import com.aga.agaChat.models.dto.CreatePostDto
+import com.aga.agaChat.models.dto.LikeToggledDto
 import com.aga.agaChat.models.dto.PagedPosts
 import com.aga.agaChat.models.dto.PostDto
 import com.aga.agaChat.models.dto.UpdatePostDto
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.net.URI
 
 @RestController
 @RequestMapping("/api/posts")
@@ -49,12 +52,22 @@ class PostController (
     @PostMapping
     fun createPost(
         @RequestBody dto: CreatePostDto,
-    ): PostDto {
-        return postService.createPost(dto)
+    ): ResponseEntity<PostDto> {
+        val newPost = postService.createPost(dto)
+        return ResponseEntity
+            .created(URI.create("/api/posts/${newPost.id}"))
+            .body(newPost)
     }
 
-    // @Put
-    @PutMapping
+    @PostMapping("/{id}/like")
+    fun toggleLikePost(
+        @PathVariable("id") id: Long
+    ): LikeToggledDto {
+        return postService.toggleLikePost(id)
+    }
+
+    // @Patch
+    @PatchMapping
     fun updatePost(
         @RequestBody dto: UpdatePostDto
     ): PostDto {
@@ -67,5 +80,7 @@ class PostController (
         @PathVariable("id") id: Long
     ): ResponseEntity<*> {
         return postService.removePost(id)
+
+
     }
 }

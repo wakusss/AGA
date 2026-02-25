@@ -9,14 +9,14 @@ data class AuthorDto(
 )
 
 data class PostDto (
-    val id:Long,
-    val content:String,
-    val imageUrl:String,
-    val author:AuthorDto,
+    val id: Long,
+    val content: String,
+    val imageUrl: String,
+    val author: AuthorDto,
     val createdAt: Date? = Date(),
-    val likesCount:Int,
-    val commentsCount:Int,
-    val isLikedByCurrentUser:Boolean,
+    val likesCount: Long,
+    val commentsCount: Long,
+    val isLikedByCurrentUser: Boolean,
 )
 
 data class CreatePostDto(

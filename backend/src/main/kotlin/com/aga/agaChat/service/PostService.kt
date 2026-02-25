@@ -2,15 +2,18 @@ package com.aga.agaChat.service
 
 import com.aga.agaChat.models.dto.AuthorDto
 import com.aga.agaChat.models.dto.CreatePostDto
+import com.aga.agaChat.models.dto.LikeToggledDto
 import com.aga.agaChat.models.dto.PagedPosts
 import com.aga.agaChat.models.dto.PostDto
 import com.aga.agaChat.models.dto.UpdatePostDto
 import com.aga.agaChat.models.entity.Post
 import com.aga.agaChat.models.entity.Role
 import com.aga.agaChat.models.entity.User
+import com.aga.agaChat.models.entity.UserPostLike
 import com.aga.agaChat.repository.LikeRepository
 import com.aga.agaChat.repository.PostRepository
 import com.aga.agaChat.repository.UserRepository
+import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -18,12 +21,12 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.util.Date
-import kotlin.time.measureTime
 
 interface PostService {
     fun getPosts(query: String?, page: Int, size: Int, sortBy: String, sortDirection: String): PagedPosts
     fun getPostById(id: Long): PostDto
     fun createPost(dto: CreatePostDto): PostDto
+    fun toggleLikePost(id: Long): LikeToggledDto
     fun updatePost(dto: UpdatePostDto): PostDto
     fun removePost(id: Long): ResponseEntity<*>
 
@@ -114,14 +117,45 @@ class PostServiceImpl(
         }
 
 
-
+    @Transactional
     override fun createPost(dto: CreatePostDto): PostDto {
         val newPost = postRepository.save(dto.toPost(getCurrentUser()!!))
         return newPost.toDto(getCurrentUser()!!.id)
+    }
+    @Transactional
+    override fun toggleLikePost(id: Long): LikeToggledDto {
+        val post = postRepository.findById(id)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id $id not found") }
+        val user = getCurrentUser() ?: throw ResponseStatusException(HttpStatus.FORBIDDEN)
 
+        val existingLike = likeRepository.findByUserAndPost(user, post)
 
+        val newLikedState: Boolean
+
+        if (existingLike != null) {
+            existingLike.liked = !existingLike.liked
+            likeRepository.save(existingLike)
+            newLikedState = existingLike.liked
+        } else {
+            val newLike = UserPostLike(
+                user = user,
+                post = post,
+                liked = true
+            )
+            likeRepository.save(newLike)
+            newLikedState = true
+        }
+
+        val likesCount = likeRepository.countByPostAndLikedTrue(post)
+        post.likesCount = likesCount
+
+        return LikeToggledDto(
+            liked = newLikedState,
+            likesCount = likesCount
+        )
     }
 
+    @Transactional
     override fun updatePost(dto: UpdatePostDto): PostDto {
         val postToUpdate = postRepository.findById(dto.id)
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id ${dto.id} not found") }
@@ -136,6 +170,7 @@ class PostServiceImpl(
             throw ResponseStatusException(HttpStatus.FORBIDDEN)
     }
 
+    @Transactional
     override fun removePost(id: Long): ResponseEntity<*> {
         val postToDelete = postRepository.findById(id)
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id ${id} not found") }
@@ -144,7 +179,7 @@ class PostServiceImpl(
         return if (postToDelete != null ) {
             if(author == currentUser){
                 postRepository.deleteById(id)
-                ResponseEntity.ok().build<Any>()
+                ResponseEntity.noContent().build<Any>()
             }
             else
                 ResponseEntity.status(HttpStatus.FORBIDDEN).build()
@@ -181,16 +216,16 @@ class PostServiceImpl(
     private fun Post.toDto(
         currentUserId: Long? = null,
     ): PostDto = PostDto(
-        id            = this.id!!,
-        content       = this.content ?: "",
-        imageUrl      = this.imageUrl ?: "",
+        id = this.id!!,
+        content = this.content ?: "",
+        imageUrl = this.imageUrl ?: "",
         author = AuthorDto(
             id        = this.user.id!!,
             username  = this.user.username ?: "",
             avatarUrl = this.user.avatarUrl ?: ""
         ),
-        createdAt     = this.createdAt,
-        likesCount    = this.likesCount,
+        createdAt = this.createdAt,
+        likesCount = this.likesCount,
         commentsCount = this.commentsCount,
         isLikedByCurrentUser = currentUserId != null &&
                 isLikedByUser(currentUserId, this.id!!)
@@ -212,7 +247,7 @@ class PostServiceImpl(
         content         = this.content,
     )
     private fun UpdatePostDto.toPost(currentUser: User): Post = Post(
-        id              = currentUser.id,
+        id              = this.id,
         user            = currentUser,
         imageUrl        = this.imageUrl,
         content         = this.content,

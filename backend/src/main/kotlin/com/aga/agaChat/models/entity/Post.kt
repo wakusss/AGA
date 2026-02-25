@@ -30,16 +30,16 @@ data class Post(
     val user: User,
 
     @Column(nullable = true)
-    val imageUrl: String? = null,
+    var imageUrl: String? = null,
 
     @Column(nullable = true)
-    val content: String? = null,
+    var content: String? = null,
 
     @Column(nullable = true)
-    val likesCount: Int = 0,
+    var likesCount: Long = 0,
 
     @Column(nullable = true)
-    val commentsCount: Int = 0,
+    var commentsCount: Long = 0,
 
     @Column(nullable = false)
     val createdAt: Date = Date(),

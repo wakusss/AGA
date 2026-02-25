@@ -39,5 +39,5 @@ data class UserPostLike(
     val post: Post,
 
     @Column(nullable = false)
-    val liked: Boolean = false,
+    var liked: Boolean = false,
     )
