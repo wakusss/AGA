@@ -21,5 +21,4 @@ export default function ProtectedRoute() {
   } else if (isAuthenticated) {
     return <Outlet />;
   }
-  return <></>;
 }

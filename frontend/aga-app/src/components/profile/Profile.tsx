@@ -3,6 +3,7 @@ import { formatDistanceToNow } from "date-fns";
 
 import PostCard from "../posts/Post";
 import Header from "../header/Header";
+import ButtonLogOut from "../ui/ButtonLogOut";
 interface userProfile {
   id: number;
   isOwnProfile: boolean;

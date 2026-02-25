@@ -9,9 +9,10 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import LoginPage from "./pages/LoginPage.tsx";
-import RegistrationPage from "./pages/RegistrationPage.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import AuthorizedRoute from "./components/AuthorizedRoute.tsx";
+import RegistrationPage from "./pages/RegistrationPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,11 +21,23 @@ const router = createBrowserRouter([
   },
   {
     path: "/signin",
-    element: <LoginPage />,
+    element: <AuthorizedRoute />,
+    children: [
+      {
+        path: "/signin",
+        element: <LoginPage />,
+      },
+    ],
   },
   {
     path: "/signup",
-    element: <RegistrationPage />,
+    element: <AuthorizedRoute />,
+    children: [
+      {
+        path: "/signup",
+        element: <RegistrationPage />,
+      },
+    ],
   },
   {
     path: "/profile",
