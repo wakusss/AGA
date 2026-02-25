@@ -119,14 +119,14 @@ class PostServiceImpl(
 
     @Transactional
     override fun createPost(dto: CreatePostDto): PostDto {
-        val newPost = postRepository.save(dto.toPost(getCurrentUser()!!))
-        return newPost.toDto(getCurrentUser()!!.id)
+        val newPost = postRepository.save(dto.toPost(getCurrentUser()))
+        return newPost.toDto(getCurrentUser().id)
     }
     @Transactional
     override fun toggleLikePost(id: Long): LikeToggledDto {
         val post = postRepository.findById(id)
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id $id not found") }
-        val user = getCurrentUser() ?: throw ResponseStatusException(HttpStatus.FORBIDDEN)
+        val user = getCurrentUser()
 
         val existingLike = likeRepository.findByUserAndPost(user, post)
 
@@ -164,7 +164,7 @@ class PostServiceImpl(
 
         if(author == currentUser) {
             postRepository.save(dto.toPost(currentUser))
-            return postToUpdate.toDto(getCurrentUser()!!.id)
+            return postToUpdate.toDto(getCurrentUser().id)
         }
         else
             throw ResponseStatusException(HttpStatus.FORBIDDEN)
@@ -228,16 +228,6 @@ class PostServiceImpl(
         commentsCount = this.commentsCount,
         isLikedByCurrentUser = currentUserId != null &&
                 isLikedByUser(currentUserId, this.id!!)
-    )
-
-    private fun PostDto.toPost(currentUser: User): Post = Post(
-        id              = this.id,
-        user            = currentUser,
-        imageUrl        = this.imageUrl,
-        content         = this.content ,
-        likesCount      = this.likesCount,
-        commentsCount   = this.commentsCount,
-        createdAt       = this.createdAt ?: Date(),
     )
 
     private fun CreatePostDto.toPost(currentUser: User): Post = Post(
