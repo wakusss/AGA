@@ -51,3 +51,48 @@ export const handleSubmitLoginData = async (
     onLoading?.(false);
   }
 };
+
+export const handleSubmitRegisterData = async (
+  e: React.MouseEvent<HTMLButtonElement>,
+  {
+    formData,
+    onError,
+    onLoading,
+    onSuccess,
+  }: {
+    formData?: {
+      name: string;
+      secondName: string;
+      login: string;
+      confirmPassword: string;
+      email: string;
+    };
+    onError?: (message: string) => void;
+    onLoading?: (isLoading: boolean) => void;
+    onSuccess?: (isSuccess: boolean) => void;
+  },
+) => {
+  e.preventDefault();
+  try {
+    const response = await api.post("auth/register", {
+      name: formData?.name,
+      secondName: formData?.secondName,
+      login: formData?.login,
+      password: formData?.confirmPassword,
+      email: formData?.email,
+    });
+
+    if (response.status === 201) {
+      onSuccess?.(true);
+    } else {
+      throw new Error("Registration failed");
+    }
+  } catch (err: any | Error) {
+    if (err.response?.status === 400) onError?.("Please fill in all fields!");
+    if (err.response?.status === 409)
+      onError?.("User with this email already exists!");
+    if (err instanceof Error) onError?.(err.message);
+  } finally {
+    onLoading?.(false);
+  }
+};

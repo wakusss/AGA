@@ -1,14 +1,18 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.tsx";
+
+import ProfilePage from "./pages/ProfilePage.tsx";
+
 import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import LoginPage from "./pages/LoginPage.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import AuthorizedRoute from "./components/AuthorizedRoute.tsx";
 import RegistrationPage from "./pages/RegistrationPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,20 +21,38 @@ const router = createBrowserRouter([
   },
   {
     path: "/signin",
-    element: <LoginPage />,
+    element: <AuthorizedRoute />,
+    children: [
+      {
+        path: "/signin",
+        element: <LoginPage />,
+      },
+    ],
   },
   {
     path: "/signup",
-    element: <RegistrationPage />,
+    element: <AuthorizedRoute />,
+    children: [
+      {
+        path: "/signup",
+        element: <RegistrationPage />,
+      },
+    ],
   },
   {
     path: "/profile",
-    element: <App />,
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/profile",
+        element: <ProfilePage />,
+      },
+    ],
   },
   {
     path: "*",
     element: (
-      <div className="p-8 text-center text-2xl">404 — Страница не найдена</div>
+      <div className="p-8 text-center text-2xl">404 — Page Not Found</div>
     ),
   },
 ]);
