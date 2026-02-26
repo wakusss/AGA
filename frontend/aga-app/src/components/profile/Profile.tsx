@@ -51,9 +51,9 @@ export default function Profile() {
     fetchPosts({
       onLoading: setLoading,
       onError: setError,
-      onSuccess: (data) => {
-        if (Array.isArray(data.content)) {
-          setPosts(data.content);
+      onSuccess: (posts) => {
+        if (Array.isArray(posts.content)) {
+          setPosts(posts.content);
         } else {
           setError("Unexpected response format");
         }
@@ -97,12 +97,6 @@ export default function Profile() {
     console.log("New post:");
     console.log("Text:", postText.trim() || "(empty)");
     console.log("File:", selectedFile ? fileName : "not attached");
-
-    // Optional: reset form after "posting"
-    // setPostText("");
-    // setFileName("No file chosen");
-    // setSelectedFile(null);
-    // if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
@@ -170,7 +164,7 @@ export default function Profile() {
             {/* Posts tab content */}
             {activeTab === "posts" && (
               <div className="p-4 sm:p-6 space-y-6">
-                {mockPosts.map((post) => (
+                {posts.map((post) => (
                   <Post key={post.id} post={post} />
                 ))}
               </div>
