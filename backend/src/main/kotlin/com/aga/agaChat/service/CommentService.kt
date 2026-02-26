@@ -9,6 +9,7 @@ import com.aga.agaChat.models.entity.User
 import com.aga.agaChat.repository.CommentRepository
 import com.aga.agaChat.repository.PostRepository
 import com.aga.agaChat.repository.UserRepository
+import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
@@ -55,6 +56,7 @@ class CommentServiceImpl(
         )
     }
 
+    @Transactional
     override fun createComment(
         postId: Long,
         dto: CreateCommentDto
@@ -69,6 +71,13 @@ class CommentServiceImpl(
                 content = dto.content,
             )
         )
+
+
+        val commentCount = commentRepository.countByPostId(postId)
+
+        // That is a real object unless function is @Transactional
+        post.commentsCount = commentCount
+
 
         return savedComment.toDto()
     }

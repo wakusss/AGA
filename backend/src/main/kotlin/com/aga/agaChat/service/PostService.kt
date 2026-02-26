@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
 interface PostService {
-    fun getPosts(query: String?, page: Int, size: Int, sortBy: String, sortDirection: String): PagedPosts
+    fun getPosts(query: String?, page: Int, size: Int, sortBy: String, sortDirection: String, userId: Long?): PagedPosts
     fun getPostById(id: Long): PostDto
     fun createPost(dto: CreatePostDto): PostDto
     fun toggleLikePost(id: Long): LikeToggledDto
@@ -46,9 +46,16 @@ class PostServiceImpl(
         page: Int,
         size: Int,
         sortBy: String,
-        sortDirection: String
+        sortDirection: String,
+        userId: Long?
     ): PagedPosts {
         var posts = postRepository.findAll()
+
+        posts = if (userId != null) {
+            posts.filter { it.user.id == userId }
+        } else {
+            posts
+        }
 
 
         // 1. Filter by query
@@ -115,6 +122,7 @@ class PostServiceImpl(
         val newPost = postRepository.save(dto.toPost(getCurrentUser()))
         return newPost.toDto(getCurrentUser().id)
     }
+
     @Transactional
     override fun toggleLikePost(id: Long): LikeToggledDto {
         val post = postRepository.findById(id)
@@ -140,6 +148,7 @@ class PostServiceImpl(
         }
 
         val likesCount = likeRepository.countByPostAndLikedTrue(post)
+        // That is a real object unless function is @Transactional
         post.likesCount = likesCount
 
         return LikeToggledDto(
@@ -202,8 +211,6 @@ class PostServiceImpl(
     private fun isLikedByUser(userId: Long, postId: Long): Boolean {
         return likeRepository.findByUserIdAndPostId(userId, postId)?.liked == true
     }
-
-
 
     private fun Post.toDto(
         currentUserId: Long? = null,

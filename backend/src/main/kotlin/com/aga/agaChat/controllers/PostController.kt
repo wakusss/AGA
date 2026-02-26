@@ -20,19 +20,9 @@ class PostController (
         @RequestParam("size", required = false) size: Int = 20,
         @RequestParam("sortBy", required = false) sortBy: String = "createdAt",
         @RequestParam("sortDirection", required = false) sortDirection: String = "asc",
+        @RequestParam("userId", required = false) userId: Long? = null,
     ): PagedPosts {
-        return postService.getPosts(query, page, size, sortBy, sortDirection)
-    }
-
-    @GetMapping("/me")
-    fun loadMyPosts(
-        @RequestParam("query", required = false) query: String?,
-        @RequestParam("page", required = false) page: Int = 0,
-        @RequestParam("size", required = false) size: Int = 20,
-        @RequestParam("sortBy", required = false) sortBy: String = "createdAt",
-        @RequestParam("sortDirection", required = false) sortDirection: String = "asc",
-    ): PagedPosts {
-        return postService.getPosts(query, page, size, sortBy, sortDirection)
+        return postService.getPosts(query, page, size, sortBy, sortDirection, userId)
     }
 
     @GetMapping("/{id}")

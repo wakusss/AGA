@@ -24,7 +24,7 @@ data class Comment(
         name = "user_id",
         nullable = false,
         foreignKey = ForeignKey(
-            name = "fk_post_user_id"
+            name = "fk_comment_user_id"
         )
     )
     val user: User,
@@ -34,7 +34,7 @@ data class Comment(
         name = "post_id",
         nullable = false,
         foreignKey = ForeignKey(
-            name = "fk_likes_post_id"
+            name = "fk_comment_post_id"
         )
     )
     val post: Post,
