@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 
 import PostCard from "../posts/Post";
 import Header from "../header/Header";
 import ButtonLogOut from "../ui/ButtonLogOut";
+import { fetchPosts } from "@/lib/utils";
 interface userProfile {
   id: number;
   isOwnProfile: boolean;
@@ -14,11 +15,11 @@ interface userProfile {
   joinedAt: Date | string;
 }
 interface Post {
-  author: {
-    id: number;
-    name: string;
-    avatar: string;
-  };
+  // author: {
+  //   id: number;
+  //   name: string;
+  //   avatar: string;
+  // };
   id: number;
   content: string;
   createAt: Date | string;
@@ -36,17 +37,28 @@ const mockProfile: userProfile = {
   location: "New York, USA",
   joinedAt: new Date("2022-01-15"),
 };
-const mockPosts: Post[] = [1, 2, 3].map((i) => ({
-  id: i,
-  author: mockProfile,
-  content: `This is post number ${i}`,
-  createAt: new Date("2022-01-15"),
-  image: `https://picsum.photos/seed/${i}/600/400`,
-  likesCount: Math.floor(Math.random() * 100),
-}));
 
 export default function Profile() {
   const profile = mockProfile;
+
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPosts({
+      onLoading: setLoading,
+      onError: setError,
+      onSuccess: (data) => {
+        if (Array.isArray(data.content)) {
+          setPosts(data.content);
+        } else {
+          setError("Unexpected response format");
+        }
+      },
+    });
+  }, []);
+
   const joinedAgo = formatDistanceToNow(new Date(profile.joinedAt), {
     addSuffix: true,
   });
@@ -118,7 +130,7 @@ export default function Profile() {
             {/* Posts */}
             {activeTab === "posts" && (
               <div className="p-4 sm:p-6 space-y-6">
-                {mockPosts.map((post) => (
+                {posts.map((post) => (
                   <PostCard key={post.id} post={post} />
                 ))}
               </div>

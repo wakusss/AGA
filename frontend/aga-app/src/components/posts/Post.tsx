@@ -1,43 +1,55 @@
-import { formatDistanceToNow } from "date-fns";
-import { useState } from "react";
+import { fetchPosts } from "@/lib/utils";
+import { formatDistanceToNow, set } from "date-fns";
+import { useEffect, useState } from "react";
+import api from "@/lib/api";
 
 interface Post {
-  author: {
-    id: number;
-    name: string;
-    avatar: string;
-  };
+  // author: {
+  //   id: number;
+  //   name: string;
+  //   avatar: string;
+  // };
   id: number;
   content: string;
   createAt: Date | string;
-  image?: string;
+  imageUrl?: string;
   likesCount?: number;
-  isLikedByCurrentUser?: boolean;
+  likedByCurrentUser?: boolean;
 }
 interface PostCardProps {
   post: Post;
 }
 
 export default function PostCard({ post }: PostCardProps) {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(post.likedByCurrentUser);
+  const [likesCount, setLikesCount] = useState(post.likesCount || 0);
 
-  function toggleLike() {
-    setLiked((prev) => !prev);
-    post.isLikedByCurrentUser = !post.isLikedByCurrentUser;
-    if (post.isLikedByCurrentUser) {
-      post.likesCount = (post.likesCount || 0) + 1;
-    } else {
-      post.likesCount = (post.likesCount || 0) - 1;
+  const toggleLike = async () => {
+    const newLiked = !liked;
+
+    setLiked(newLiked);
+    setLikesCount(newLiked ? likesCount + 1 : likesCount - 1);
+
+    try {
+      if (newLiked) {
+        await api.post(`/posts/${post.id}/like`);
+      } else {
+        await api.post(`/posts/${post.id}/like`);
+      }
+    } catch (err) {
+      setLiked(!newLiked);
+      setLikesCount(post.likesCount || 0);
+      alert("Failed to update like status. Please try again.");
     }
-  }
+  };
 
-  const timeAgo = formatDistanceToNow(new Date(post.createAt), {
-    addSuffix: true,
-  });
+  // const timeAgo = formatDistanceToNow(new Date(post.createAt), {
+  //   addSuffix: true,
+  // });
   return (
     <div className="bg-white rounded-xl shadow-md mb-4 border border-gray-200 max-w-2xl mx-auto">
-      {/* Шапка */}
-      <div className="flex items-center gap-3 p-4">
+      {/* Header */}
+      {/* <div className="flex items-center gap-3 p-4">
         <img
           src={post.author.avatar}
           alt={post.author.name}
@@ -46,18 +58,18 @@ export default function PostCard({ post }: PostCardProps) {
 
         <div>
           <div className="font-semibold text-gray-900">{post.author.name}</div>
-          <div className="text-xs text-gray-500">{timeAgo} · 🌐</div>
+          <div className="text-xs text-gray-500">Just now · 🌐</div>
         </div>
-      </div>
+      </div> */}
 
-      {/* Текст поста */}
+      {/* Text */}
       <div className="px-4 pb-3 text-gray-800 whitespace-pre-line leading-relaxed">
         {post.content}
       </div>
 
-      {post.image && (
+      {post.imageUrl && (
         <img
-          src={post.image}
+          src={post.imageUrl}
           alt="Post image"
           className="w-full object-cover max-h-[560px] bg-gray-50"
           loading="lazy"
@@ -94,11 +106,10 @@ export default function PostCard({ post }: PostCardProps) {
         </button>
       </div>
 
-      {/* Количество лайков теперь под кнопками, как в FB */}
-      {post.likesCount && post.likesCount > 0 && (
-        <div className="px-4 py-2 text-sm text-gray-500 border-t border-gray-100 bg-blue-50/30">
-          {post.likesCount} {post.likesCount === 1 ? "like" : "likes"}
-        </div>
+      {likesCount > 0 && (
+        <span className="px-4 py-2 text-sm text-gray-500 border-t border-gray-100 bg-blue-50/30">
+          {likesCount} {likesCount === 1 ? "like" : "likes"}
+        </span>
       )}
     </div>
   );
