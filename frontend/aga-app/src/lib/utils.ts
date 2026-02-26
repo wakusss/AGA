@@ -4,20 +4,21 @@ import api from "./api";
 import { useAuthStore } from "@/stores/authStore";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
-export function handleSubmitLoginData(
-  e: React.MouseEvent<HTMLButtonElement>,
+
+export const handleSubmitLoginData = async (
+  e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
   {
-    email,
-    password,
+    email = "",
+    password = "",
     onError,
     onLoading,
     onSuccess,
   }: {
     email?: string;
     password?: string;
-    onError?: (msg: string) => void;
+    onError?: (message: string) => void;
     onLoading?: (isLoading: boolean) => void;
     onSuccess?: (isSuccess: boolean) => void;
   },
@@ -50,7 +51,6 @@ export function handleSubmitLoginData(
     onLoading?.(false);
   }
 };
-
 export const handleSubmitRegisterData = async (
   e: React.MouseEvent<HTMLButtonElement>,
   {
@@ -94,4 +94,4 @@ export const handleSubmitRegisterData = async (
   } finally {
     onLoading?.(false);
   }
-  )}
+};

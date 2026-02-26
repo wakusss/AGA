@@ -13,6 +13,7 @@ import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import AuthorizedRoute from "./components/AuthorizedRoute.tsx";
 import RegistrationPage from "./pages/RegistrationPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import FeedPage from "./pages/FeedPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -55,7 +56,7 @@ const router = createBrowserRouter([
       <div className="p-8 text-center text-2xl">404 — Page Not Found</div>
     ),
   },
-        { path: "/feed", element: <FeedPage /> },
+  { path: "/feed", element: <FeedPage /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(
