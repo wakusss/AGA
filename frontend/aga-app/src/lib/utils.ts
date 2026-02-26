@@ -46,11 +46,12 @@ export const handleSubmitLoginData = async (
     if (err.response?.status === 400) onError?.("Please fill in all fields!");
     if (err.response?.status === 500)
       onError?.("Server error, please try again later!");
-    if (Error instanceof Error) onError?.(err.message);
+    if (err instanceof Error) onError?.(err.message);
   } finally {
     onLoading?.(false);
   }
 };
+
 export const handleSubmitRegisterData = async (
   e: React.MouseEvent<HTMLButtonElement>,
   {
@@ -71,9 +72,11 @@ export const handleSubmitRegisterData = async (
     onSuccess?: (isSuccess: boolean) => void;
   },
 ) => {
-  e.preventDefault();
+  // e.preventDefault();  ← закомментировано, т.к. передали MouseEvent, а не FormEvent
+  onLoading?.(true);
+
   try {
-    const response = await api.post("auth/register", {
+    const response = await api.post("/auth/register", {
       name: formData?.name,
       secondName: formData?.secondName,
       login: formData?.login,
@@ -86,7 +89,7 @@ export const handleSubmitRegisterData = async (
     } else {
       throw new Error("Registration failed");
     }
-  } catch (err: any | Error) {
+  } catch (err: any) {
     if (err.response?.status === 400) onError?.("Please fill in all fields!");
     if (err.response?.status === 409)
       onError?.("User with this email already exists!");
@@ -114,8 +117,46 @@ export const fetchPosts = async ({
     } else {
       throw new Error("Failed to fetch posts");
     }
-  } catch (err: any | Error) {
+  } catch (err: any) {
     if (err.response?.status === 401) onError?.("Unauthorized, please log in!");
+    if (err.response?.status === 500)
+      onError?.("Server error, please try again later!");
+    if (err instanceof Error) onError?.(err.message);
+  } finally {
+    onLoading?.(false);
+  }
+};
+
+interface UserProfile {
+  id: number;
+  email: string;
+  username: string;
+  bio: string;
+  avatarUrl?: string;
+  createdAt: string;    
+}
+
+export const fetchCurrentUserProfile = async ({
+  onError,
+  onLoading,
+  onSuccess,
+}: {
+  onError?: (message: string) => void;
+  onLoading?: (isLoading: boolean) => void;
+  onSuccess?: (data: UserProfile) => void;
+}) => {
+  onLoading?.(true);
+
+  try {
+    const response = await api.get("/users/me");
+
+    if (response.status === 200) {
+      onSuccess?.(response.data);
+    } else {
+      throw new Error(`Unexpected status: ${response.status}`);
+    }
+  } catch (err: any) {
+     if (err.response?.status === 401) onError?.("Unauthorized, please log in!");
     if (err.response?.status === 500)
       onError?.("Server error, please try again later!");
     if (err instanceof Error) onError?.(err.message);
