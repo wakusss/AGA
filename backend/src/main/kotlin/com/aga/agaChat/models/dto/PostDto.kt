@@ -21,7 +21,7 @@ data class PostDto (
 
 data class CreatePostDto(
     val content:String,
-    val imageUrl:String
+    val imageUrl:String?
 )
 
 data class UpdatePostDto(
