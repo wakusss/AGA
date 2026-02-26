@@ -247,6 +247,12 @@ components:
       schema:
         type: string
         default: null
+    UserId:
+      name: userId
+      in: query
+      schema:
+        type: integer
+        default: null
 
 paths:
   /auth/register:
@@ -400,6 +406,7 @@ paths:
         - $ref: '#/components/parameters/Size'
         - $ref: '#/components/parameters/SortBy'
         - $ref: '#/components/parameters/SortDirection'
+        - $ref: '#/components/parameters/UserId'
       responses:
         '200':
           description: Paginated list of posts
@@ -590,7 +597,6 @@ paths:
             format: int64
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Size'
-        - $ref: '#/components/parameters/SortBy'
       responses:
         '200':
           description: Paginated comments
