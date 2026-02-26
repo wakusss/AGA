@@ -1,14 +1,7 @@
 package com.aga.agaChat.models.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
-import java.util.Date
+import jakarta.persistence.*
+import java.util.*
 
 @Entity
 @Table(name = "users")
@@ -24,13 +17,13 @@ data class User(
     val password: String?,
 
     @Column(nullable = true)
-    val username: String? = null,
+    var username: String? = null,
 
     @Column(nullable = true)
-    val bio: String? = null,
+    var bio: String? = null,
 
     @Column(nullable = true)
-    val avatarUrl: String? = null,
+    var avatarUrl: String? = null,
 
     @Enumerated(EnumType.STRING)
     val role: Role = Role.USER,
