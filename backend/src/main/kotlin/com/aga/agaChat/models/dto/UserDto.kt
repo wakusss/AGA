@@ -11,6 +11,12 @@ data class UserDto(
     val createdAt: Date = Date(),
 )
 
+data class CommentUserDto(
+    val id: Long,
+    val username: String,
+    val avatarUrl: String,
+)
+
 data class UpdateUserDto(
     var username: String? = null,
     var avatarUrl: String? = null,

@@ -1,11 +1,6 @@
 package com.aga.agaChat.service
 
-import com.aga.agaChat.models.dto.AuthorDto
-import com.aga.agaChat.models.dto.CreatePostDto
-import com.aga.agaChat.models.dto.LikeToggledDto
-import com.aga.agaChat.models.dto.PagedPosts
-import com.aga.agaChat.models.dto.PostDto
-import com.aga.agaChat.models.dto.UpdatePostDto
+import com.aga.agaChat.models.dto.*
 import com.aga.agaChat.models.entity.Post
 import com.aga.agaChat.models.entity.Role
 import com.aga.agaChat.models.entity.User
@@ -20,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-import java.util.Date
 
 interface PostService {
     fun getPosts(query: String?, page: Int, size: Int, sortBy: String, sortDirection: String): PagedPosts
@@ -58,7 +52,6 @@ class PostServiceImpl(
 
 
         // 1. Filter by query
-
         if (!query.isNullOrBlank()) {
             val q = query.trim()
             posts = posts.filter { post ->
