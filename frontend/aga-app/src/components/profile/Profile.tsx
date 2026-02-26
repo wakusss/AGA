@@ -1,17 +1,33 @@
-import React, { useState, useRef, type ChangeEvent } from "react";
+import React, { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { formatDistanceToNow } from "date-fns";
-
-import Post from "../posts/Post";
 import { mockProfile } from "../mocks/Profile";
-import { mockPosts } from "../mocks/Post";
-import { type UserProfile } from "../types/Profile";
+import { type Post } from "../types/Post";
+import PostCard from "../posts/PostCard";
 import Header from "../header/Header";
+import { fetchPosts } from "@/lib/utils";
 import ButtonLogOut from "../ui/ButtonLogOut";
 
 export default function Profile() {
-  const profile: UserProfile = mockProfile;
+  const profile = mockProfile;
 
-  // Format join date in English (date-fns uses English by default)
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPosts({
+      onLoading: setLoading,
+      onError: setError,
+      onSuccess: (data) => {
+        if (Array.isArray(data.content)) {
+          setPosts(data.content);
+        } else {
+          setError("Unexpected response format");
+        }
+      },
+    });
+  }, []);
+
   const joinedAgo = formatDistanceToNow(new Date(profile.joinedAt), {
     addSuffix: true,
   });
@@ -48,12 +64,6 @@ export default function Profile() {
     console.log("New post:");
     console.log("Text:", postText.trim() || "(empty)");
     console.log("File:", selectedFile ? fileName : "not attached");
-
-    // Optional: reset form after "posting"
-    // setPostText("");
-    // setFileName("No file chosen");
-    // setSelectedFile(null);
-    // if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
@@ -121,8 +131,8 @@ export default function Profile() {
             {/* Posts tab content */}
             {activeTab === "posts" && (
               <div className="p-4 sm:p-6 space-y-6">
-                {mockPosts.map((post) => (
-                  <Post key={post.id} post={post} />
+                {posts.map((post) => (
+                  <PostCard key={post.id} post={post} />
                 ))}
               </div>
             )}

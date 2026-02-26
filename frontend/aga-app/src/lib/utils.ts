@@ -95,3 +95,31 @@ export const handleSubmitRegisterData = async (
     onLoading?.(false);
   }
 };
+
+export const fetchPosts = async ({
+  onError,
+  onLoading,
+  onSuccess,
+}: {
+  onError?: (message: string) => void;
+  onLoading?: (isLoading: boolean) => void;
+  onSuccess?: (data: any) => void;
+}) => {
+  onLoading?.(true);
+  try {
+    const response = await api.get("/posts");
+    if (response.status === 200) {
+      onSuccess?.(response.data);
+      console.log("Posts fetched successfully:", response.data);
+    } else {
+      throw new Error("Failed to fetch posts");
+    }
+  } catch (err: any | Error) {
+    if (err.response?.status === 401) onError?.("Unauthorized, please log in!");
+    if (err.response?.status === 500)
+      onError?.("Server error, please try again later!");
+    if (err instanceof Error) onError?.(err.message);
+  } finally {
+    onLoading?.(false);
+  }
+};

@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from "@/components/nav-bar/NavBar";
-import PostCard from "../posts/Post";
+import PostCard from "../posts/PostCard";
 import SearchBar from "./SearchBar";
 
 import { mockPosts } from "../mocks/Post";
