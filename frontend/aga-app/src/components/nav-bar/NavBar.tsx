@@ -7,7 +7,7 @@ export default function NavBar() {
     useState(false);
   return (
     <>
-      <nav className="bg-white p-5">
+      <nav className="bg-white p-5 fixed top-0 inset-x-0 z-50 bg-white">
         <div className="mx-auto max-w-7xl">
           <div className="flex h-16 items-center justify-between gap-4 sm:gap-10">
             {/* Logo */}

@@ -62,7 +62,7 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
       </div> */}
 
-      {/* Text */}
+      {/* Content */}
       <div className="px-4 pb-3 text-gray-800 whitespace-pre-line leading-relaxed">
         {post.content}
       </div>
