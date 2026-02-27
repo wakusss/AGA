@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, type ChangeEvent } from "react";
+import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { mockProfile } from "../mocks/Profile";
 import { type Post } from "../types/Post";

@@ -1,12 +1,13 @@
-import { fetchPosts } from "@/lib/utils";
 import { formatDistanceToNow, set } from "date-fns";
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { type Post } from "../types/Post";
+import CommentSection from "../comments/CommentSection";
 
 export default function PostCard({ post }: { post: Post }) {
   const [liked, setLiked] = useState(post.likedByCurrentUser);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
+  const [showComments, setShowComments] = useState(false);
 
   const toggleLike = async () => {
     const newLiked = !liked;
@@ -25,6 +26,10 @@ export default function PostCard({ post }: { post: Post }) {
       setLikesCount(post.likesCount || 0);
       alert("Failed to update like status. Please try again.");
     }
+  };
+
+  const toggleComments = () => {
+    setShowComments((prev) => !prev);
   };
 
   // const timeAgo = formatDistanceToNow(new Date(post.createAt), {
@@ -81,7 +86,10 @@ export default function PostCard({ post }: { post: Post }) {
           Like
         </button>
 
-        <button className="flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
+        <button
+          onClick={toggleComments}
+          className="flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+        >
           Comment
         </button>
 
@@ -89,6 +97,12 @@ export default function PostCard({ post }: { post: Post }) {
           Share
         </button>
       </div>
+
+      {showComments && (
+        <div className="w-full p-4 border-t border-gray-200">
+          <CommentSection postId={post.id} />
+        </div>
+      )}
 
       {likesCount > 0 && (
         <span className="px-4 py-2 text-sm text-gray-500 border-t border-gray-100 bg-blue-50/30">
