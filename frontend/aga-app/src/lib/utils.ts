@@ -110,7 +110,6 @@ export const fetchPosts = async ({
     const response = await api.get("/posts");
     if (response.status === 200) {
       onSuccess?.(response.data);
-      console.log("Posts fetched successfully:", response.data);
     } else {
       throw new Error("Failed to fetch posts");
     }
@@ -121,5 +120,33 @@ export const fetchPosts = async ({
     if (err instanceof Error) onError?.(err.message);
   } finally {
     onLoading?.(false);
+  }
+};
+
+export const createPost = async ({
+  postData,
+  onError,
+  onSuccess,
+}: {
+  postData?: {
+    content: string;
+    imageUrl?: string;
+  };
+  onError?: (message: string) => void;
+  onSuccess?: (data: any) => void;
+}) => {
+  try {
+    const response = await api.post("/posts", postData);
+    if (response.status === 201) {
+      onSuccess?.(true);
+    } else {
+      throw new Error("Failed to create post");
+    }
+  } catch (err: any | Error) {
+    if (err.response?.status === 400) onError?.("Invalid post data!");
+    if (err.response?.status === 401) onError?.("Unauthorized, please log in!");
+    if (err.response?.status === 500)
+      onError?.("Server error, please try again later!");
+    if (err instanceof Error) onError?.(err.message);
   }
 };
