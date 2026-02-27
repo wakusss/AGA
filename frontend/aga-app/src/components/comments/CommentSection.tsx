@@ -2,16 +2,7 @@ import { getComments } from "@/lib/utils";
 import { addComment } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import CommentItem from "./CommentItem";
-
-interface Comment {
-  id: number;
-  content: string;
-  author: {
-    username: string;
-    avatarUrl: string;
-  };
-  createdAt: string | Date;
-}
+import type { Comment } from "../types/Comment";
 
 interface CommentSectionProps {
   postId: number;
@@ -22,16 +13,6 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const [newComment, setNewComment] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    getComments(postId, {
-      onLoading: setLoading,
-      onError: setError,
-      onSuccess: (data) => {
-        setComments(data);
-      },
-    });
-  }, []);
 
   const handleSubmitComment = () => {
     addComment(
@@ -44,6 +25,16 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       },
     );
   };
+
+  useEffect(() => {
+    getComments(postId, {
+      onLoading: setLoading,
+      onError: setError,
+      onSuccess: (data) => {
+        setComments(data.content);
+      },
+    });
+  }, [handleSubmitComment]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewComment(e.target.value.toString());
