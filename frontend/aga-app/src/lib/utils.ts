@@ -164,3 +164,32 @@ export const fetchCurrentUserProfile = async ({
     onLoading?.(false);
   }
 };
+export const updateCurrentUserProfile = async ({
+  data,
+  onSuccess,
+  onError,
+}: {
+  data: {
+    username: string;
+    bio?: string;
+    avatarUrl?: string | null;
+  };
+  onSuccess?: (updated: UserProfile) => void;
+  onError?: (message: string) => void;
+}) => {
+  try {
+    const response = await api.patch("/users/me", {
+      username: data.username.trim(),
+      bio: data.bio?.trim(),
+      avatarUrl: data.avatarUrl,
+    });
+
+    if (response.status === 200) {
+      onSuccess?.(response.data);
+    }
+  } catch (err: any) {
+    const msg = err.response?.data?.message || "Failed to update profile";
+    onError?.(msg);
+    console.error("PATCH /users/me error:", err);
+  }
+};
