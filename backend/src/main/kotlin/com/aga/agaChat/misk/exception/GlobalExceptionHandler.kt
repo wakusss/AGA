@@ -1,4 +1,4 @@
-package com.aga.agaChat.exception
+package com.aga.agaChat.misk.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

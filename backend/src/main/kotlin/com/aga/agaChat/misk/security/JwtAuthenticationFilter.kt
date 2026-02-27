@@ -1,4 +1,4 @@
-package com.aga.agaChat.security
+package com.aga.agaChat.misk.security
 
 import com.aga.agaChat.service.JwtService
 import jakarta.servlet.FilterChain

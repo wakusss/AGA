@@ -17,16 +17,6 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val jwtService: JwtService
 ) {
-
-    init {
-        val user = User(
-            email = "user@gmail.com",
-            password = passwordEncoder.encode("user@gmail.com"),
-            role = Role.USER,
-        )
-        userRepository.save(user)
-    }
-
     /**
      * Register new user
      * @throws BadCredentialsException on email already exists
@@ -70,11 +60,11 @@ class AuthService(
     fun login(req: LoginRequest): AuthResponse {
         // 1. Find user by email
         val user = userRepository.findByEmail(req.email)
-            ?: throw BadCredentialsException("Incorrect email or password 1")
+            ?: throw BadCredentialsException("Incorrect email or password")
 
         // 2. Check password
         if (!passwordEncoder.matches(req.password, user.password)) {
-            throw BadCredentialsException("Incorrect email or password 2")
+            throw BadCredentialsException("Incorrect email or password")
         }
 
         // 3. Generate JWT-token
