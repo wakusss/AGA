@@ -78,6 +78,11 @@ export default function CreatePost() {
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none"
         />
 
+        <img
+          src={selectedFile ? URL.createObjectURL(selectedFile) : ""}
+          alt=""
+        />
+
         <div className="mt-4 flex flex-wrap items-center gap-4">
           {/* Hidden file input */}
           <input
