@@ -1,7 +1,7 @@
 package com.aga.agaChat.configuration
 
 import com.aga.agaChat.repository.UserRepository
-import com.aga.agaChat.security.JwtAuthenticationFilter
+import com.aga.agaChat.misk.security.JwtAuthenticationFilter
 import com.aga.agaChat.service.JwtService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
