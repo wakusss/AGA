@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import api from "./api";
 import { useAuthStore } from "@/stores/authStore";
+import { on } from "events";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -217,5 +218,68 @@ export const createPost = async ({
     if (err.response?.status === 500)
       onError?.("Server error, please try again later!");
     if (err instanceof Error) onError?.(err.message);
+  }
+};
+
+export const getComments = async (
+  postId: number,
+  {
+    onError,
+    onLoading,
+    onSuccess,
+  }: {
+    onError?: (message: string) => void;
+    onLoading?: (isLoading: boolean) => void;
+    onSuccess?: (data: any) => void;
+  },
+) => {
+  onLoading?.(true);
+
+  try {
+    const response = await api.get(`/posts/${postId}/comments`);
+    if (response.status === 200) {
+      onSuccess?.(response.data);
+    } else {
+      throw new Error("Failed to fetch comments");
+    }
+  } catch (err: any | Error) {
+    if (err.response?.status === 500)
+      onError?.("Server error, please try again later!");
+    if (err instanceof Error) onError?.(err.message);
+  } finally {
+    onLoading?.(false);
+  }
+};
+
+export const addComment = async (
+  postId: number,
+  commentData: {
+    content: string;
+  },
+  {
+    onError,
+    onLoading,
+    onSuccess,
+  }: {
+    onError?: (message: string) => void;
+    onLoading?: (isLoading: boolean) => void;
+    onSuccess?: (data: any) => void;
+  },
+) => {
+  onLoading?.(true);
+
+  try {
+    const response = await api.post(`/posts/${postId}/comments`, commentData);
+    if (response.status === 201) {
+      onSuccess?.(response.data);
+    } else {
+      throw new Error("Failed to add comment");
+    }
+  } catch (err: any | Error) {
+    if (err.response?.status === 500)
+      onError?.("Server error, please try again later!");
+    if (err instanceof Error) onError?.(err.message);
+  } finally {
+    onLoading?.(false);
   }
 };
