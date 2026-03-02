@@ -14,6 +14,8 @@ import ButtonLogOut from "../ui/ButtonLogOut";
 import EditProfileDialog, {
   type ProfileFormData,
 } from "../widgets/PopUpEditProfile";
+import CreatePost from "../posts/CreatePost";
+
 export default function Profile() {
   // ── Profile states ────────────────────────────────────────
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -111,45 +113,13 @@ export default function Profile() {
     });
   }, []);
 
-  const handleFileSelectClick = () => {
-    fileInputRef.current?.click();
-  };
+  const joinedAgo = formatDistanceToNow(new Date(profile.joinedAt), {
+    addSuffix: true,
+  });
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFileName(file.name);
-      setSelectedFile(file);
-    } else {
-      setFileName("No file chosen");
-      setSelectedFile(null);
-    }
-  };
-
-  const handleCreatePost = () => {
-    console.log("Creating post:");
-    console.log("Text:", postText.trim() || "(empty)");
-    console.log("File:", selectedFile ? fileName : "not attached");
-  };
-
-  // ── Profile loading / error states ────────────────────────
-  if (profileLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading profile...</div>
-      </div>
-    );
-  }
-
-  if (profileError || !profile) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-red-600 text-lg">
-          {profileError || "Failed to load profile"}
-        </div>
-      </div>
-    );
-  }
+  const [activeTab, setActiveTab] = useState<
+    "posts" | "Create" | "about" | "friends" | "photos"
+  >("posts");
 
   return (
     <>
@@ -252,6 +222,7 @@ export default function Profile() {
               )}
             </div>
           )}
+            <ButtonLogOut />
 
           {activeTab === "Create" && (
             <div className="p-6 sm:p-8">
@@ -263,22 +234,12 @@ export default function Profile() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none"
               />
 
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                  accept="image/*,.pdf"
-                />
-
-                <button
-                  type="button"
-                  onClick={handleFileSelectClick}
-                  className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Choose File
-                </button>
+            {/* Create tab content */}
+            {activeTab === "Create" && (
+              <div className="p-4 sm:p-6">
+                <CreatePost />
+              </div>
+            )}
 
                 <span className="text-gray-600 text-sm truncate max-w-xs">
                   {fileName}

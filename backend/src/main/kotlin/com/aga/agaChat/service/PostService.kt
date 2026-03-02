@@ -2,7 +2,6 @@ package com.aga.agaChat.service
 
 import com.aga.agaChat.models.dto.*
 import com.aga.agaChat.models.entity.Post
-import com.aga.agaChat.models.entity.Role
 import com.aga.agaChat.models.entity.User
 import com.aga.agaChat.models.entity.UserPostLike
 import com.aga.agaChat.repository.LikeRepository
@@ -12,7 +11,6 @@ import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
@@ -31,15 +29,7 @@ class PostServiceImpl(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
     private val likeRepository: LikeRepository,
-
-
-    // Delete in production
-    private val passwordEncoder: PasswordEncoder
 ): PostService {
-
-    init {
-        addTestPosts()
-    }
 
     override fun getPosts(
         query: String?,
@@ -241,47 +231,4 @@ class PostServiceImpl(
         imageUrl        = this.imageUrl,
         content         = this.content,
     )
-
-
-    fun addTestPosts() {
-        val user = User(
-            // id = null,
-            username = "Glebs Sinkevich",
-            email = "glebsinks@gmail.com",
-            password = passwordEncoder.encode("glebsinks@gmail.com"),
-            bio = "Developer",
-            avatarUrl = "https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png",
-            role = Role.USER
-        )
-
-        val savedUser = userRepository.save(user)
-
-        val firstPost = Post(
-            user = savedUser,
-            content = "Good morning! Today is a perfect day for coffee and coding ☕💻 #Kotlin #SpringBoot",
-            imageUrl = "https://www.wishgoodmorning.com/wp-content/uploads/2017/04/Wishing-You-A-Day-Full-Of-Joyfull-Moments..jpg",
-            likesCount = 18,
-            commentsCount = 4
-        )
-        val secondPost = Post(
-            user = savedUser,
-            content = "Has anyone tried the new features in Spring Boot 3.4? Share your impressions! 🚀",
-            likesCount = 7,
-            commentsCount = 12
-        )
-
-        val thirdPost = Post(
-            user = savedUser,
-            content = "AGA Chat update 1.2: now you can send voice messages and reactions! 🔥 Who's already tried it?",
-            imageUrl = "https://play-lh.googleusercontent.com/CAu_Njn4xHjGXg_i5i-H0K-PF2PiKHwvpgNiESjjP7iBBPGfX8kE8cd9SPap0AA96Zg",
-            likesCount = 342,
-            commentsCount = 98
-        )
-        postRepository.saveAll(listOf(firstPost,secondPost,thirdPost))
-
-    }
 }
-
-
-
-
