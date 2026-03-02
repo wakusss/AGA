@@ -1,6 +1,6 @@
 import { useRef, useState, type ChangeEvent } from "react";
-import api from "@/lib/api";
 import { createPost } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePost() {
   const [postText, setPostText] = useState("");
@@ -9,6 +9,7 @@ export default function CreatePost() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   // Opens the hidden file input dialog
   const handleFileSelectClick = () => {
@@ -45,7 +46,7 @@ export default function CreatePost() {
 
         if (!res.ok) {
           const err = await res.json();
-          throw new Error(err.error?.message || "Ошибка загрузки фото");
+          throw new Error(err.error?.message || "Error uploading file");
         }
 
         const data = await res.json();
@@ -61,6 +62,7 @@ export default function CreatePost() {
           setErrorMessage(message);
         },
       });
+      window.location.reload();
     } catch (err) {
       if (err instanceof Error) setErrorMessage(err.message);
     }
