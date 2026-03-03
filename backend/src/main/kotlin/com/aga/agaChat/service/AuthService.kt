@@ -36,6 +36,7 @@ class AuthService(
         val user = User(
             email = req.email,
             password = hashedPassword,
+            username = req.userName,
             role = Role.USER,
         )
 
