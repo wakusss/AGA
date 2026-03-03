@@ -253,9 +253,7 @@ export const getComments = async (
 
 export const addComment = async (
   postId: number,
-  commentData: {
-    content: string;
-  },
+  commentData: { content: string },
   {
     onError,
     onLoading,
@@ -270,15 +268,18 @@ export const addComment = async (
 
   try {
     const response = await api.post(`/posts/${postId}/comments`, commentData);
-    if (response.status === 201) {
-      onSuccess?.(response.data);
-    } else {
-      throw new Error("Failed to add comment");
-    }
-  } catch (err: any | Error) {
-    if (err.response?.status === 500)
+
+    onSuccess?.(response.data);
+  } catch (err: any) {
+    if (err.response?.status === 500) {
       onError?.("Server error, please try again later!");
-    if (err instanceof Error) onError?.(err.message);
+    } else if (err.response?.status === 400) {
+      onError?.("Invalid comment data");
+    } else if (err.response?.status === 403) {
+      onError?.("You don't have permission to comment");
+    } else {
+      onError?.("Failed to add comment: " + (err.message || "Unknown error"));
+    }
   } finally {
     onLoading?.(false);
   }

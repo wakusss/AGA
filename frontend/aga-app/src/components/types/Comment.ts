@@ -5,5 +5,5 @@ export interface Comment {
     username: string;
     avatarUrl: string;
   };
-  createdAt: string | Date;
+  created_at: string;
 }
