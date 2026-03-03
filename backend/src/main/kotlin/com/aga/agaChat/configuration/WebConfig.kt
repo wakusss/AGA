@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class WebConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000", "http://localhost:5173") // 5173 = Vite
+            .allowedOriginPatterns("*") // 5173 = Vite
             .allowedMethods("*")
             .allowedHeaders("*")
             .allowCredentials(true)
