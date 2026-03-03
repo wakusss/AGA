@@ -169,10 +169,10 @@ class PostServiceImpl(
 
         val currentUser = getCurrentUser()
 
-        if (post.user?.id != currentUser.id) {
+        if (post.user.id != currentUser.id) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this post")
         }
-
+        likeRepository.deleteByPostId(post.id)
         postRepository.deleteById(id)
 
         return ResponseEntity.noContent().build()
