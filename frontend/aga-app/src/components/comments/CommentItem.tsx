@@ -6,6 +6,25 @@ interface CommentItemProps {
 }
 
 export default function CommentItem(props: CommentItemProps) {
+  const formatDate = (fullDate: string) => {
+    if (!fullDate) return "—";
+
+    try {
+      const date = new Date(fullDate);
+      if (isNaN(date.getTime())) return "—";
+
+      return date.toLocaleString("pl-PL", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (e) {
+      return "—";
+    }
+  };
+
   return (
     <>
       <div className="flex items-start gap-2 px-4 py-3">
@@ -28,9 +47,7 @@ export default function CommentItem(props: CommentItemProps) {
               {props.comment.content}
             </div>
             <div className="text-xs text-gray-500 mt-2">
-              {/* {formatDistanceToNow(new Date(props.comment.createdAt), {
-                addSuffix: true,
-              })} */}
+              {formatDate(props.comment.created_at)}
             </div>
           </div>
         </div>
