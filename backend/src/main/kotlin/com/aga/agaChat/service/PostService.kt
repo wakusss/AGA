@@ -163,21 +163,19 @@ class PostServiceImpl(
     }
 
     @Transactional
-    override fun removePost(id: Long): ResponseEntity<*> {
-        val postToDelete = postRepository.findById(id)
-            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id ${id} not found") }
-        val author = postToDelete.user
+    override fun removePost(id: Long): ResponseEntity<Void> {
+        val post = postRepository.findById(id)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id $id not found") }
+
         val currentUser = getCurrentUser()
-        return if (postToDelete != null ) {
-            if(author == currentUser){
-                postRepository.deleteById(id)
-                ResponseEntity.noContent().build<Any>()
-            }
-            else
-                ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        if (post.user?.id != currentUser.id) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this post")
         }
-        else
-            ResponseEntity.notFound().build<Any>()
+
+        postRepository.deleteById(id)
+
+        return ResponseEntity.noContent().build()
     }
 
 
