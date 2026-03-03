@@ -18,7 +18,14 @@ import CreatePost from "../posts/CreatePost";
 
 export default function Profile() {
   // ── Profile states ────────────────────────────────────────
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfile>({
+    id: 0,
+    email: "",
+    username: "unknown",
+    bio: "",
+    avatarUrl: "/default-avatar.png",
+    createdAt: "",
+  });
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState<string | null>(null);
 
@@ -26,16 +33,6 @@ export default function Profile() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
   const [postsError, setPostsError] = useState<string | null>(null);
-
-  // ── Tabs & Create post states ─────────────────────────────
-  const [activeTab, setActiveTab] = useState<
-    "posts" | "Create" | "about" | "friends" | "photos"
-  >("posts");
-
-  const [postText, setPostText] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState<string>("No file chosen");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Load profile once on mount
   useEffect(() => {
@@ -113,10 +110,6 @@ export default function Profile() {
     });
   }, []);
 
-  const joinedAgo = formatDistanceToNow(new Date(profile.joinedAt), {
-    addSuffix: true,
-  });
-
   const [activeTab, setActiveTab] = useState<
     "posts" | "Create" | "about" | "friends" | "photos"
   >("posts");
@@ -130,7 +123,7 @@ export default function Profile() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <img
-              src={profile.avatarUrl || "/default-avatar.png"}
+              src={profile.avatarUrl}
               alt={`${profile.username} avatar`}
               className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-100"
             />
@@ -139,9 +132,7 @@ export default function Profile() {
                 {profile.username}
               </h1>
               <p className="text-gray-600 mt-1">{profile.email}</p>
-              <p className="mt-3 text-gray-700">
-                {profile.bio || "No bio yet"}
-              </p>
+              <p className="mt-3 text-gray-700">{profile.bio}</p>
               <p className="text-sm text-gray-500 mt-2">
                 Since {new Date(profile.createdAt).toLocaleDateString()}
               </p>
@@ -167,9 +158,9 @@ export default function Profile() {
             <EditProfileDialog
               ref={dialogRef}
               initialData={{
-                username: profile.username,
-                bio: profile.bio ?? "",
-                avatarUrl: profile.avatarUrl ?? "/default-avatar.png",
+                username: profile != undefined ? profile.username : "",
+                bio: profile != undefined ? profile.bio : "",
+                avatarUrl: profile.avatarUrl,
               }}
               onSave={handleSave}
             />
@@ -222,45 +213,12 @@ export default function Profile() {
               )}
             </div>
           )}
-            <ButtonLogOut />
+          <ButtonLogOut />
 
+          {/* Create tab content */}
           {activeTab === "Create" && (
-            <div className="p-6 sm:p-8">
-              <textarea
-                value={postText}
-                onChange={(e) => setPostText(e.target.value)}
-                placeholder="What's on your mind?"
-                rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none"
-              />
-
-            {/* Create tab content */}
-            {activeTab === "Create" && (
-              <div className="p-4 sm:p-6">
-                <CreatePost />
-              </div>
-            )}
-
-                <span className="text-gray-600 text-sm truncate max-w-xs">
-                  {fileName}
-                </span>
-
-                <button
-                  type="button"
-                  onClick={handleCreatePost}
-                  disabled={!postText.trim() && !selectedFile}
-                  className={`
-                    ml-auto px-6 py-2.5 rounded-full font-medium transition-colors
-                    ${
-                      postText.trim() || selectedFile
-                        ? "bg-green-600 text-white hover:bg-green-700"
-                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    }
-                  `}
-                >
-                  Create Post
-                </button>
-              </div>
+            <div className="p-4 sm:p-6">
+              <CreatePost />
             </div>
           )}
 

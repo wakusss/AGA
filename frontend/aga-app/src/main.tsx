@@ -14,6 +14,7 @@ import AuthorizedRoute from "./components/AuthorizedRoute.tsx";
 import RegistrationPage from "./pages/RegistrationPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import FeedPage from "./pages/FeedPage.tsx";
+import ButtonLogOut from "./components/ui/ButtonLogOut.tsx";
 
 const router = createBrowserRouter([
   {

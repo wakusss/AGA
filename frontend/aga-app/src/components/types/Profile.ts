@@ -1,8 +1,8 @@
 export interface UserProfile {
-id: number;
-  email: string;
-  username: string;
-  bio: string;
-  avatarUrl?: string;     // может отсутствовать
-  createdAt: string;
+  id: number | 0;
+  email: string | "";
+  username: string | "";
+  bio: string | "";
+  avatarUrl?: string | ""; 
+  createdAt: string | "";
 }
