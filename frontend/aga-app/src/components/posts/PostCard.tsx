@@ -1,13 +1,31 @@
 import { formatDistanceToNow, set } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import api from "@/lib/api";
 import { type Post } from "../types/Post";
 import CommentSection from "../comments/CommentSection";
+import { deletePost } from "../../lib/utils";
+import EditPostDialog from "../widgets/PopUpEditPost";
 
-export default function PostCard({ post }: { post: Post }) {
+type PostCardProps = {
+  id: string | number;
+  content: string;
+  onDeleted: (id: string | number) => void;
+};
+
+export default function PostCard({
+  post,
+  handlePostDeleted,
+  inProfile = false,
+}: {
+  post: Post;
+  handlePostDeleted: () => void;
+  inProfile: boolean;
+}) {
   const [liked, setLiked] = useState(post.likedByCurrentUser);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
   const [showComments, setShowComments] = useState(false);
+
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const toggleLike = async () => {
     const newLiked = !liked;
@@ -31,25 +49,72 @@ export default function PostCard({ post }: { post: Post }) {
   const toggleComments = () => {
     setShowComments((prev) => !prev);
   };
+  const fallbackAvatar = "https://placehold.co/64x64?text=Нет+фото"; // или 80x80, или просто /64
+
+  const avatarUrl = post.author.avatarUrl
+    ? post.author.avatarUrl.startsWith("http")
+      ? post.author.avatarUrl
+      : `https://api.твой-сайт.ru${post.author.avatarUrl}` // ← подставь реальный базовый URL
+    : fallbackAvatar;
 
   // const timeAgo = formatDistanceToNow(new Date(post.createAt), {
   //   addSuffix: true,
   // });
+  const [loading, setLoading] = useState(false);
+
+  const handleDelete = async () => {
+    if (!window.confirm("Delete?")) return;
+
+    setLoading(true);
+
+    try {
+      const res = await deletePost(post.id);
+
+      if (res.status < 200 || res.status >= 300) {
+        throw new Error(`Неуспешный статус: ${res.status}`);
+      }
+
+      // Если сервер вернул 200 + тело с сообщением — можно прочитать
+      if (res.status === 200 && res.data?.message) {
+        console.log("Сервер сказал:", res.data.message);
+      }
+
+      handlePostDeleted();
+    } catch (err: any) {
+      console.error("Ошибка при удалении:", err);
+      alert("Не получилось удалить пост");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  function onDeleted(id: number) {}
+
   return (
     <div className="bg-white rounded-xl shadow-md mb-4 border border-gray-200 max-w-2xl mx-auto">
       {/* Header */}
-      {/* <div className="flex items-center gap-3 p-4">
+      <div className="flex items-center gap-3 p-4">
         <img
-          src={post.author.avatar}
-          alt={post.author.name}
+          src={avatarUrl}
+          alt={post.author.username || "Пользователь"}
           className="w-10 h-10 rounded-full object-cover ring-1 ring-blue-100"
+          onError={(e) => {
+            console.error(
+              "Не удалось загрузить аватар:",
+              post.author.avatarUrl,
+            );
+            e.currentTarget.src = fallbackAvatar; // fallback при ошибке
+            e.currentTarget.alt = "Аватар не загрузился";
+          }}
         />
 
         <div>
-          <div className="font-semibold text-gray-900">{post.author.name}</div>
+          <div className="font-semibold text-gray-900">
+            {post.author.username}
+          </div>
           <div className="text-xs text-gray-500">Just now · 🌐</div>
         </div>
-      </div> */}
+      </div>
 
       {/* Content */}
       <div className="px-4 pb-3 text-gray-800 whitespace-pre-line leading-relaxed">
@@ -96,6 +161,34 @@ export default function PostCard({ post }: { post: Post }) {
         <button className="flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
           Share
         </button>
+        {inProfile && (
+          <button
+            type="submit"
+            onClick={handleDelete}
+            disabled={loading}
+            className={` px-3 py-1 rounded ${
+              loading ? " bg-gray-400" : "bg-red-600 hover:bg-red-700"
+            } text-white`}
+          >
+            {loading ? "Deleting..." : "Delete"}
+          </button>
+        )}
+
+        {inProfile && (
+          <>
+            <button onClick={() => dialogRef.current?.showModal()}>
+              Edit post
+            </button>
+            <EditPostDialog
+              ref={dialogRef}
+              initialData={post}
+              onSuccess={() => {
+                // refresh posts, show toast, etc.
+                console.log("Post updated!");
+              }}
+            />
+          </>
+        )}
       </div>
 
       {showComments && (

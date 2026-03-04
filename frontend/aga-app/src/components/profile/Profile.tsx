@@ -32,6 +32,7 @@ export default function Profile() {
   // ── Posts states ──────────────────────────────────────────
   const [posts, setPosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
+  const [postsDeleted, setPostsDeleted] = useState(false);
   const [postsError, setPostsError] = useState<string | null>(null);
 
   // Load profile once on mount
@@ -108,7 +109,11 @@ export default function Profile() {
         setPostsLoading(false);
       },
     });
-  }, []);
+  }, [postsDeleted]);
+
+  const handlePostDeleted = () => {
+    setPostsDeleted(!postsDeleted);
+  };
 
   const [activeTab, setActiveTab] = useState<
     "posts" | "Create" | "about" | "friends" | "photos"
@@ -209,7 +214,14 @@ export default function Profile() {
                   No posts yet. Create your first post!
                 </div>
               ) : (
-                posts.map((post) => <PostCard key={post.id} post={post} />)
+                posts.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
+                    handlePostDeleted={handlePostDeleted}
+                    inProfile={true}
+                  />
+                ))
               )}
             </div>
           )}
