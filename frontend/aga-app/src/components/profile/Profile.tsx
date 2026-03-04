@@ -31,6 +31,7 @@ export default function Profile() {
   // ── Posts states ──────────────────────────────────────────
   const [posts, setPosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
+  const [postsDeleted, setPostsDeleted] = useState(false);
   const [postsError, setPostsError] = useState<string | null>(null);
 
   // Load profile and post once on mount
@@ -67,8 +68,7 @@ export default function Profile() {
       onSuccess: (data) => {
         // Assuming server returns object { content: Post[], ... }
         if (data && Array.isArray(data.content)) {
-          console.log(data);
-          setPosts(data.content.sort());
+          setPosts(data.content);
         } else if (Array.isArray(data)) {
           setPosts(data);
         } else {
@@ -77,7 +77,7 @@ export default function Profile() {
         setPostsLoading(false);
       },
     });
-  }, [profile?.id]);
+  }, [profile?.id, postsDeleted]);
 
   const dialogRef = useRef<HTMLDialogElement>(null);
   const CLOUD_NAME = "dilkuprok";
@@ -118,6 +118,10 @@ export default function Profile() {
     } finally {
       dialogRef.current?.close();
     }
+  };
+
+  const handlePostDeleted = () => {
+    setPostsDeleted(!postsDeleted);
   };
 
   const [activeTab, setActiveTab] = useState<
@@ -219,7 +223,14 @@ export default function Profile() {
                   No posts yet. Create your first post!
                 </div>
               ) : (
-                posts.map((post) => <PostCard key={post.id} post={post} />)
+                posts.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
+                    handlePostDeleted={handlePostDeleted}
+                    inProfile={true}
+                  />
+                ))
               )}
             </div>
           )}

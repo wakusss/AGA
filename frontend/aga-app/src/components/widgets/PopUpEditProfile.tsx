@@ -64,7 +64,11 @@ const EditProfileDialog = forwardRef<HTMLDialogElement, EditProfileDialogProps>(
     return (
       <dialog
         ref={dialogRef}
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-neutral-900"
+        className="fixed inset-0 m-auto
+    max-w-lg w-[90vw] max-h-[90vh] h-fit
+    rounded-xl shadow-2xl border border-gray-200
+    bg-white p-6 overflow-y-auto
+    backdrop:bg-black/60 backdrop:backdrop-blur-sm"
         onClose={handleClose}
       >
         {/* Style the modal backdrop */}

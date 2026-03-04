@@ -29,7 +29,7 @@ export default function SharedPostPage() {
       <Header />
       <div className="h-32"></div>
       {loading && <h1 className="text-center text-xl">Loading...</h1>}
-      {post ? <PostCard post={post} /> : ""}
+      {post && <PostCard post={post} />}
       {error && <h1 className="text-center text-xl">{error}</h1>}
     </>
   );
