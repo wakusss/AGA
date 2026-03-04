@@ -1,15 +1,13 @@
 import { useRef, useState, type ChangeEvent } from "react";
 import { createPost } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
 
 export default function CreatePost() {
   const [postText, setPostText] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>("No file chosen");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+  // const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  // const [errorMessage, setErrorMessage] = useState("");
 
   // Opens the hidden file input dialog
   const handleFileSelectClick = () => {
@@ -60,12 +58,10 @@ export default function CreatePost() {
         onSuccess: () => {
           window.location.reload();
         },
-        onError: (message) => {
-          setErrorMessage(message);
-        },
+        onError: () => {},
       });
     } catch (err) {
-      if (err instanceof Error) setErrorMessage(err.message);
+      if (err instanceof Error) console.log(err);
     }
   };
 

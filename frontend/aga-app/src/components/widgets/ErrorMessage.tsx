@@ -1,7 +1,7 @@
 // components/widgets/ErrorMessage.tsx
 interface ErrorMessageProps {
   message: string;
-  type?: "error" | "success" | "info"; // если есть поддержка разных типов
+  type?: "error" | "success" | "info";
 }
 
 export default function ErrorMessage({

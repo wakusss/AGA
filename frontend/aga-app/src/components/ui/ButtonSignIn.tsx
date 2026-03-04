@@ -19,7 +19,7 @@ export default function ButtonSignIn({
 }: SignInButtonProps) {
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    handleSubmitLoginData(e, {
+    handleSubmitLoginData({
       email,
       password,
       onError: setError,

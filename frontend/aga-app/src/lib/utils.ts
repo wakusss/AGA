@@ -8,22 +8,19 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const handleSubmitLoginData = async (
-  e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
-  {
-    email = "",
-    password = "",
-    onError,
-    onLoading,
-    onSuccess,
-  }: {
-    email?: string;
-    password?: string;
-    onError?: (message: string) => void;
-    onLoading?: (isLoading: boolean) => void;
-    onSuccess?: (isSuccess: boolean) => void;
-  },
-) => {
+export const handleSubmitLoginData = async ({
+  email = "",
+  password = "",
+  onError,
+  onLoading,
+  onSuccess,
+}: {
+  email?: string;
+  password?: string;
+  onError?: (message: string) => void;
+  onLoading?: (isLoading: boolean) => void;
+  onSuccess?: (isSuccess: boolean) => void;
+}) => {
   onLoading?.(true);
 
   try {
@@ -53,24 +50,21 @@ export const handleSubmitLoginData = async (
   }
 };
 
-export const handleSubmitRegisterData = async (
-  e: React.MouseEvent<HTMLButtonElement>,
-  {
-    formData,
-    onError,
-    onLoading,
-    onSuccess,
-  }: {
-    formData?: {
-      email: string;
-      confirmPassword: string;
-      userName: string;
-    };
-    onError?: (message: string) => void;
-    onLoading?: (isLoading: boolean) => void;
-    onSuccess?: (isSuccess: boolean) => void;
-  },
-) => {
+export const handleSubmitRegisterData = async ({
+  formData,
+  onError,
+  onLoading,
+  onSuccess,
+}: {
+  formData?: {
+    email: string;
+    confirmPassword: string;
+    userName: string;
+  };
+  onError?: (message: string) => void;
+  onLoading?: (isLoading: boolean) => void;
+  onSuccess?: (isSuccess: boolean) => void;
+}) => {
   onLoading?.(true);
   try {
     const response = await api.post("/auth/register", {

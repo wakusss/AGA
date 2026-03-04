@@ -12,8 +12,8 @@ interface CommentSectionProps {
 export default function CommentSection(props: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState<string | null>(null);
   const [isAddingComment, setIsAddingComment] = useState(false);
 
   const handleSubmitComment = () => {
@@ -23,10 +23,8 @@ export default function CommentSection(props: CommentSectionProps) {
       props.postId,
       { content: newComment },
       {
-        onLoading: (isLoading) => setLoading(isLoading),
-        onError: (message) => {
-          (setError(message), setIsAddingComment(false));
-        },
+        onLoading: () => {},
+        onError: () => {},
         onSuccess: (newComment) => {
           setComments((prev) => [...prev, newComment]);
           setNewComment("");
@@ -39,8 +37,8 @@ export default function CommentSection(props: CommentSectionProps) {
 
   useEffect(() => {
     getComments(props.postId, {
-      onLoading: setLoading,
-      onError: setError,
+      onLoading: () => {},
+      onError: () => {},
       onSuccess: (data) => {
         setComments(data.content);
       },

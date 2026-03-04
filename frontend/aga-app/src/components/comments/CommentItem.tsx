@@ -1,4 +1,3 @@
-import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import type { Comment } from "../types/Comment";
 
 interface CommentItemProps {

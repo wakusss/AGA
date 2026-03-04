@@ -3,11 +3,7 @@ import { type UserProfile } from "../types/Profile";
 import { type Post } from "../types/Post";
 import PostCard from "../posts/PostCard";
 import Header from "../header/Header";
-import {
-  fetchPosts,
-  fetchCurrentUserProfile,
-  handleSubmitLoginData,
-} from "@/lib/utils";
+import { fetchPosts, fetchCurrentUserProfile } from "@/lib/utils";
 import api from "@/lib/api";
 import ButtonLogOut from "../ui/ButtonLogOut";
 import EditProfileDialog, {
@@ -25,8 +21,8 @@ export default function Profile() {
     avatarUrl: "/default-avatar.png",
     createdAt: "",
   });
-  const [profileLoading, setProfileLoading] = useState(true);
-  const [profileError, setProfileError] = useState<string | null>(null);
+  // const [profileLoading, setProfileLoading] = useState(true);
+  // const [profileError, setProfileError] = useState<string | null>(null);
 
   // ── Posts states ──────────────────────────────────────────
   const [posts, setPosts] = useState<Post[]>([]);
@@ -38,7 +34,7 @@ export default function Profile() {
   useEffect(() => {
     // Profile
     fetchCurrentUserProfile({
-      onLoading: setProfileLoading,
+      onLoading: () => {},
       onSuccess: (data) => {
         const newProfile = {
           id: data.id,
@@ -49,13 +45,8 @@ export default function Profile() {
           createdAt: data.createdAt,
         };
         setProfile(newProfile);
-
-        setProfileLoading(false);
       },
-      onError: (msg) => {
-        setProfileError(msg);
-        setProfileLoading(false);
-      },
+      onError: () => {},
     });
   }, []);
 

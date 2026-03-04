@@ -60,11 +60,11 @@ export default function RegistrationForm() {
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = () => {
     if (!validateForm()) return;
     if (errorMsg) handleError(errorMsg);
 
-    handleSubmitRegisterData(e, {
+    handleSubmitRegisterData({
       formData,
       onError: handleError,
       onLoading: setIsLoading,
