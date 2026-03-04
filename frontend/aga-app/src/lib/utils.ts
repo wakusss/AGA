@@ -352,24 +352,27 @@ export const fetchAllPosts = async ({
   }
 };
 interface UpdatePostData {
-  content: string;
+  content: string | "";
   imageUrl?: string | null;
 }
 
 export const updatePost = async (
-  postId: string,
+  postId: number,
   data: UpdatePostData,
   onSuccess?: (updated: Post) => void,
   onError?: (msg: string) => void
 ): Promise<Post | null> => {
   try {
-    const payload: any = { content: data.content.trim() };
+    const payload: any = { content: data.content.trim() , id:postId };
+    
 
     if (data.imageUrl !== undefined) {
       payload.imageUrl = data.imageUrl || null;
     }
+    console.log(payload);
+    console.log(postId);
 
-    const response = await api.patch<Post>(`/posts/${postId}`, payload, {
+    const response = await api.patch<Post>(`/posts`, payload, {
       headers: { "Content-Type": "application/json" },
     });
 
@@ -387,6 +390,7 @@ export const updatePost = async (
 
     onError?.(message);
     console.error(`PATCH /posts/${postId} failed:`, err);
+    
     return null;
   }
 };

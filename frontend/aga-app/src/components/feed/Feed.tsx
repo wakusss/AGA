@@ -50,7 +50,14 @@ export default function Feed() {
         ) : (
           <div className="space-y-6">
             {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
+              <PostCard
+                key={post.id}
+                post={post}
+                handlePostDeleted={function (): void {
+                  throw new Error("Function not implemented.");
+                }}
+                inProfile={false}
+              />
             ))}
           </div>
         )}

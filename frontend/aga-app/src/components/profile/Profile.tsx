@@ -219,6 +219,7 @@ export default function Profile() {
                     key={post.id}
                     post={post}
                     handlePostDeleted={handlePostDeleted}
+                    inProfile={true}
                   />
                 ))
               )}

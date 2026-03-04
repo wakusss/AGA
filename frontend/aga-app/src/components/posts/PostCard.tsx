@@ -1,5 +1,5 @@
 import { formatDistanceToNow, set } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import api from "@/lib/api";
 import { type Post } from "../types/Post";
 import CommentSection from "../comments/CommentSection";
@@ -15,13 +15,17 @@ type PostCardProps = {
 export default function PostCard({
   post,
   handlePostDeleted,
+  inProfile = false,
 }: {
   post: Post;
   handlePostDeleted: () => void;
+  inProfile: boolean;
 }) {
   const [liked, setLiked] = useState(post.likedByCurrentUser);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
   const [showComments, setShowComments] = useState(false);
+
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const toggleLike = async () => {
     const newLiked = !liked;
@@ -157,16 +161,34 @@ export default function PostCard({
         <button className="flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
           Share
         </button>
-        <button
-          type="submit"
-          onClick={handleDelete}
-          disabled={loading}
-          className={` px-3 py-1 rounded ${
-            loading ? " bg-gray-400" : "bg-red-600 hover:bg-red-700"
-          } text-white`}
-        >
-          {loading ? "Deleting..." : "Delete"}
-        </button>
+        {inProfile && (
+          <button
+            type="submit"
+            onClick={handleDelete}
+            disabled={loading}
+            className={` px-3 py-1 rounded ${
+              loading ? " bg-gray-400" : "bg-red-600 hover:bg-red-700"
+            } text-white`}
+          >
+            {loading ? "Deleting..." : "Delete"}
+          </button>
+        )}
+
+        {inProfile && (
+          <>
+            <button onClick={() => dialogRef.current?.showModal()}>
+              Edit post
+            </button>
+            <EditPostDialog
+              ref={dialogRef}
+              initialData={post}
+              onSuccess={() => {
+                // refresh posts, show toast, etc.
+                console.log("Post updated!");
+              }}
+            />
+          </>
+        )}
       </div>
 
       {showComments && (

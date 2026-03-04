@@ -3,6 +3,7 @@
 
 import { forwardRef, useRef, useState, type FormEvent } from "react";
 import { updatePost } from "../../lib/utils";
+import { type Post } from "../types/Post";
 
 export interface PostFormData {
   content: string;
@@ -10,13 +11,12 @@ export interface PostFormData {
 }
 
 interface EditPostDialogProps {
-  postId: string;
-  initialData: PostFormData;
+  initialData: Post;
   onSuccess?: () => void;
 }
 
 const EditPostDialog = forwardRef<HTMLDialogElement, EditPostDialogProps>(
-  ({ postId, initialData, onSuccess }, ref) => {
+  ({ initialData, onSuccess }, ref) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [content, setContent] = useState(initialData.content);
     const [imageUrl, setImageUrl] = useState<string | null | undefined>(
@@ -37,7 +37,7 @@ const EditPostDialog = forwardRef<HTMLDialogElement, EditPostDialogProps>(
       setLoading(true);
 
       await updatePost(
-        postId,
+        initialData.id,
         { content, imageUrl: imageUrl || null },
         () => {
           setLoading(false);
