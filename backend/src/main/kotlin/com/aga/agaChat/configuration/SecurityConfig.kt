@@ -5,6 +5,7 @@ import com.aga.agaChat.misk.security.JwtAuthenticationFilter
 import com.aga.agaChat.service.JwtService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -16,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableMethodSecurity
@@ -34,15 +38,36 @@ class SecurityConfig(
         User(email, user.password, listOf(SimpleGrantedAuthority("ROLE_${user.role}")))
     }
 
-    @Bean fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val config = CorsConfiguration().apply {
+            allowedOriginPatterns = listOf(
+                "http://localhost:5173",           // Vite dev
+                "http://localhost:3000",           // CRA dev
+                "https://aga-frontend.onrender.com" // Прод фронт
+            )
+            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+            allowedHeaders = listOf("*")
+            allowCredentials = true
+        }
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", config)
+        return source
+    }
+
+    @Bean
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .cors { it.configurationSource(corsConfigurationSource()) }
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
-                it.requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
-                    .anyRequest().permitAll()
+                it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Preflight
+                    .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
+                    .anyRequest().authenticated()  // ← Было permitAll() — вернул authenticated
             }
-            .addFilterBefore(JwtAuthenticationFilter(jwtService, userDetailsService()), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(JwtAuthenticationFilter(jwtService, userDetailsService()),
+                UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }
