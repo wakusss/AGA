@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: "https://aga-ifpq.onrender.com/api",
   headers: { "Content-Type": "application/json" },
 });
 
@@ -10,6 +10,7 @@ api.interceptors.request.use(
   async (config) => {
     const { useAuthStore } = await import("@/stores/authStore");
     const { accessToken } = useAuthStore.getState();
+
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }

@@ -1,13 +1,14 @@
 export interface Post {
-  // author: {
-  //   id: number;
-  //   name: string;
-  //   avatar: string;
-  // };
+  author: {
+    id: number;
+    username: string;
+    avatarUrl: string;
+  };
   id: number;
   content: string;
   createAt: Date | string;
   imageUrl?: string;
   likesCount?: number;
+  commentsCount: number;
   likedByCurrentUser?: boolean;
 }

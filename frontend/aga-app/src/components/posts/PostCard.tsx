@@ -1,5 +1,4 @@
-import { formatDistanceToNow, set } from "date-fns";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "@/lib/api";
 import { type Post } from "../types/Post";
 import CommentSection from "../comments/CommentSection";
@@ -7,6 +6,7 @@ import CommentSection from "../comments/CommentSection";
 export default function PostCard({ post }: { post: Post }) {
   const [liked, setLiked] = useState(post.likedByCurrentUser);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
+  const [commentsCount, setCommentsCount] = useState(post.commentsCount || 0);
   const [showComments, setShowComments] = useState(false);
 
   const toggleLike = async () => {
@@ -30,6 +30,30 @@ export default function PostCard({ post }: { post: Post }) {
 
   const toggleComments = () => {
     setShowComments((prev) => !prev);
+  };
+
+  const handleShare = async () => {
+    const postUrl = `${window.location.origin}/feed/${post.id}`;
+
+    const shareData = {
+      title: `Post from ${post.author.username || "user"}`,
+      text:
+        post.content.slice(0, 120) + (post.content.length > 120 ? "..." : ""),
+      url: postUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(postUrl);
+        alert("The link has been copied to the clipboard!");
+      }
+    } catch (err) {
+      console.error("Sharing error:", err);
+      navigator.clipboard.writeText(postUrl);
+      alert("Unable to share. Copy the link.: " + postUrl);
+    }
   };
 
   // const timeAgo = formatDistanceToNow(new Date(post.createAt), {
@@ -93,20 +117,36 @@ export default function PostCard({ post }: { post: Post }) {
           Comment
         </button>
 
-        <button className="flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
+        <button
+          onClick={handleShare}
+          className="flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+        >
           Share
         </button>
       </div>
 
       {showComments && (
         <div className="w-full p-4 border-t border-gray-200">
-          <CommentSection postId={post.id} />
+          <CommentSection
+            postId={post.id}
+            setCommentCount={() => {
+              setCommentsCount(commentsCount + 1);
+            }}
+          />
         </div>
       )}
 
       {likesCount > 0 && (
-        <span className="px-4 py-2 text-sm text-gray-500 border-t border-gray-100 bg-blue-50/30">
+        <span className="px-4 py-2 text-sm text-gray-500">
           {likesCount} {likesCount === 1 ? "like" : "likes"}
+        </span>
+      )}
+
+      {commentsCount > 0 && (
+        <span>
+          <span className="px-4 py-2 text-sm text-gray-500">
+            {commentsCount} {commentsCount === 1 ? "comment" : "commentaries"}
+          </span>
         </span>
       )}
     </div>

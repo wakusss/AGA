@@ -1,8 +1,5 @@
 import { useState } from "react";
 import { validateEmail, validatePassword } from "../../lib/validation";
-
-import InputName from "../ui/InputName";
-import InputLastName from "../ui/InputLastName";
 import InputLogin from "../ui/InputLogin";
 import InputPassword from "../ui/InputPassword";
 import InputConfirmPassword from "../ui/InputConfirmPassword";
@@ -20,12 +17,10 @@ export default function RegistrationForm() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: "",
-    secondName: "",
-    login: "",
+    email: "",
     password: "",
     confirmPassword: "",
-    email: "",
+    userName: "",
   });
 
   // Validate form and show error notifications if needed
@@ -104,12 +99,7 @@ export default function RegistrationForm() {
         alt="AGA Chat Logo"
         className="h-10 sm:h-14 lg:h-auto w-auto object-contain shrink-0 max-w-[220px]"
       />
-      <InputName name={formData.name} setName={setField("name")} />
-      <InputLastName
-        lastName={formData.secondName}
-        setLastName={setField("secondName")}
-      />
-      <InputLogin login={formData.login} setLogin={setField("login")} />
+      <InputLogin login={formData.userName} setLogin={setField("userName")} />
       <InputPassword
         password={formData.password}
         setPassword={setField("password")}

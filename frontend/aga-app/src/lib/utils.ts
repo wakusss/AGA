@@ -2,7 +2,6 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import api from "./api";
 import { useAuthStore } from "@/stores/authStore";
-import { on } from "events";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -62,27 +61,21 @@ export const handleSubmitRegisterData = async (
     onSuccess,
   }: {
     formData?: {
-      name: string;
-      secondName: string;
-      login: string;
-      confirmPassword: string;
       email: string;
+      confirmPassword: string;
+      userName: string;
     };
     onError?: (message: string) => void;
     onLoading?: (isLoading: boolean) => void;
     onSuccess?: (isSuccess: boolean) => void;
   },
 ) => {
-  // e.preventDefault();  ← закомментировано, т.к. передали MouseEvent, а не FormEvent
   onLoading?.(true);
-
   try {
     const response = await api.post("/auth/register", {
-      name: formData?.name,
-      secondName: formData?.secondName,
-      login: formData?.login,
-      password: formData?.confirmPassword,
       email: formData?.email,
+      password: formData?.confirmPassword,
+      userName: formData?.userName,
     });
 
     if (response.status === 201) {
@@ -101,17 +94,19 @@ export const handleSubmitRegisterData = async (
 };
 
 export const fetchPosts = async ({
+  userId,
   onError,
   onLoading,
   onSuccess,
 }: {
+  userId: number;
   onError?: (message: string) => void;
   onLoading?: (isLoading: boolean) => void;
   onSuccess?: (data: any) => void;
 }) => {
   onLoading?.(true);
   try {
-    const response = await api.get("/posts");
+    const response = await api.get("/posts?userId=" + userId);
     if (response.status === 200) {
       onSuccess?.(response.data);
     } else {
@@ -133,7 +128,7 @@ interface UserProfile {
   username: string;
   bio: string;
   avatarUrl?: string;
-  createdAt: string;    
+  createdAt: string;
 }
 
 export const fetchCurrentUserProfile = async ({
@@ -156,7 +151,7 @@ export const fetchCurrentUserProfile = async ({
       throw new Error(`Unexpected status: ${response.status}`);
     }
   } catch (err: any) {
-     if (err.response?.status === 401) onError?.("Unauthorized, please log in!");
+    if (err.response?.status === 401) onError?.("Unauthorized, please log in!");
     if (err.response?.status === 500)
       onError?.("Server error, please try again later!");
     if (err instanceof Error) onError?.(err.message);
@@ -279,6 +274,34 @@ export const addComment = async (
       onError?.("You don't have permission to comment");
     } else {
       onError?.("Failed to add comment: " + (err.message || "Unknown error"));
+    }
+  } finally {
+    onLoading?.(false);
+  }
+};
+
+export const getPost = async (
+  postId: number,
+  {
+    onError,
+    onLoading,
+    onSuccess,
+  }: {
+    onError?: (message: string) => void;
+    onLoading?: (isLoading: boolean) => void;
+    onSuccess?: (data: any) => void;
+  },
+) => {
+  try {
+    onLoading?.(true);
+    const response = await api.get(`/posts/${postId}`);
+
+    onSuccess?.(response.data);
+  } catch (err: any) {
+    if (err.response?.status === 404) {
+      onError?.("This post does not exist");
+    } else {
+      onError?.("Failed to show post: " + (err.message || "Unknown error"));
     }
   } finally {
     onLoading?.(false);

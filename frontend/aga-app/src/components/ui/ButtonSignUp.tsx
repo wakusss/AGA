@@ -3,12 +3,10 @@ import LoadingSpinner from "./LoadingSpinner";
 interface SignUpButtonProps {
   className?: string;
   formData?: {
-    name: string;
-    secondName: string;
-    login: string;
+    email: string;
     password: string;
     confirmPassword: string;
-    email: string;
+    userName: string;
   };
   isLoading?: boolean;
   isSuccess?: boolean;

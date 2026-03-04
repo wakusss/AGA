@@ -6,9 +6,10 @@ import type { Comment } from "../types/Comment";
 
 interface CommentSectionProps {
   postId: number;
+  setCommentCount: () => void;
 }
 
-export default function CommentSection({ postId }: CommentSectionProps) {
+export default function CommentSection(props: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     setIsAddingComment(true);
     if (!newComment.trim()) return;
     addComment(
-      postId,
+      props.postId,
       { content: newComment },
       {
         onLoading: (isLoading) => setLoading(isLoading),
@@ -33,17 +34,18 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         },
       },
     );
+    props.setCommentCount();
   };
 
   useEffect(() => {
-    getComments(postId, {
+    getComments(props.postId, {
       onLoading: setLoading,
       onError: setError,
       onSuccess: (data) => {
         setComments(data.content);
       },
     });
-  }, [postId]);
+  }, [props.postId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewComment(e.target.value);

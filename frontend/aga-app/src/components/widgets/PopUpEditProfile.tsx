@@ -1,4 +1,3 @@
-// components/EditProfileDialog.tsx
 "use client";
 
 import {
@@ -24,7 +23,6 @@ const EditProfileDialog = forwardRef<HTMLDialogElement, EditProfileDialogProps>(
   ({ initialData, onSave }, ref) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
 
-    // Fix: expose internal dialog ref to parent
     useImperativeHandle(ref, () => dialogRef.current!);
 
     const [username, setUsername] = useState(initialData.username);
@@ -33,12 +31,28 @@ const EditProfileDialog = forwardRef<HTMLDialogElement, EditProfileDialogProps>(
       initialData.avatarUrl,
     );
 
+    const isUsernameChanged = username !== initialData.username;
+    const isBioChanged = bio !== initialData.bio;
+    const isAvatarUrlChanged = avatarUrl !== initialData.avatarUrl;
+
+    const hasChanges = isUsernameChanged || isBioChanged || isAvatarUrlChanged;
+
     const handleSubmit = (e: FormEvent) => {
       e.preventDefault();
+      const updatedData: Partial<ProfileFormData> = {};
+      if (isUsernameChanged) updatedData.username = username.trim();
+      if (isBioChanged) updatedData.bio = bio.trim();
+      if (isAvatarUrlChanged) updatedData.avatarUrl = avatarUrl;
+
+      if (!hasChanges) {
+        dialogRef.current?.close();
+        return;
+      }
+
       onSave({
-        username: username.trim(),
-        bio: bio.trim(),
-        avatarUrl,
+        username: updatedData.username || initialData.username,
+        bio: updatedData.bio || initialData.bio,
+        avatarUrl: updatedData.avatarUrl || initialData.avatarUrl,
       });
       dialogRef.current?.close();
     };

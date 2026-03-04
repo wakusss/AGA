@@ -57,12 +57,13 @@ export default function CreatePost() {
           content: postText,
           imageUrl: imageUrl,
         },
-        onSuccess: () => setIsSuccess(true),
+        onSuccess: () => {
+          window.location.reload();
+        },
         onError: (message) => {
           setErrorMessage(message);
         },
       });
-      window.location.reload();
     } catch (err) {
       if (err instanceof Error) setErrorMessage(err.message);
     }

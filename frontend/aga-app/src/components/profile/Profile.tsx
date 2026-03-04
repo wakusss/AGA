@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { formatDistanceToNow } from "date-fns";
 import { type UserProfile } from "../types/Profile";
 import { type Post } from "../types/Post";
 import PostCard from "../posts/PostCard";
@@ -21,7 +20,7 @@ export default function Profile() {
   const [profile, setProfile] = useState<UserProfile>({
     id: 0,
     email: "",
-    username: "unknown",
+    username: "",
     bio: "",
     avatarUrl: "/default-avatar.png",
     createdAt: "",
@@ -34,12 +33,22 @@ export default function Profile() {
   const [postsLoading, setPostsLoading] = useState(true);
   const [postsError, setPostsError] = useState<string | null>(null);
 
-  // Load profile once on mount
+  // Load profile and post once on mount
   useEffect(() => {
+    // Profile
     fetchCurrentUserProfile({
       onLoading: setProfileLoading,
       onSuccess: (data) => {
-        setProfile(data);
+        const newProfile = {
+          id: data.id,
+          email: data.email,
+          username: data.username,
+          bio: data.bio,
+          avatarUrl: data.avatarUrl,
+          createdAt: data.createdAt,
+        };
+        setProfile(newProfile);
+
         setProfileLoading(false);
       },
       onError: (msg) => {
@@ -49,15 +58,35 @@ export default function Profile() {
     });
   }, []);
 
+  useEffect(() => {
+    // Posts
+    fetchPosts({
+      userId: profile.id,
+      onLoading: setPostsLoading,
+      onError: setPostsError,
+      onSuccess: (data) => {
+        // Assuming server returns object { content: Post[], ... }
+        if (data && Array.isArray(data.content)) {
+          console.log(data);
+          setPosts(data.content.sort());
+        } else if (Array.isArray(data)) {
+          setPosts(data);
+        } else {
+          setPostsError("Invalid response format from server");
+        }
+        setPostsLoading(false);
+      },
+    });
+  }, [profile?.id]);
+
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const CLOUD_NAME = "dilkuprok"; // e.g. 'dexamplecloud'
-  const UPLOAD_PRESET = "profile_avatar_unsigned"; // your unsigned preset name
+  const CLOUD_NAME = "dilkuprok";
+  const UPLOAD_PRESET = "profile_avatar_unsigned";
 
   const handleSave = async (formData: ProfileFormData) => {
     try {
       let finalAvatarUrl = formData.avatarUrl;
 
-      // If avatar was changed locally (blob URL) → upload to Cloudinary
       if (formData.avatarUrl?.startsWith("blob:")) {
         const blob = await fetch(formData.avatarUrl).then((r) => r.blob());
         const fd = new FormData();
@@ -91,25 +120,6 @@ export default function Profile() {
     }
   };
 
-  // Load posts once on mount
-  useEffect(() => {
-    fetchPosts({
-      onLoading: setPostsLoading,
-      onError: setPostsError,
-      onSuccess: (data) => {
-        // Assuming server returns object { content: Post[], ... }
-        if (data && Array.isArray(data.content)) {
-          setPosts(data.content);
-        } else if (Array.isArray(data)) {
-          setPosts(data);
-        } else {
-          setPostsError("Invalid response format from server");
-        }
-        setPostsLoading(false);
-      },
-    });
-  }, []);
-
   const [activeTab, setActiveTab] = useState<
     "posts" | "Create" | "about" | "friends" | "photos"
   >("posts");
@@ -121,45 +131,47 @@ export default function Profile() {
       <div className="mt-20 max-w-4xl mx-auto px-4 sm:px-6 py-6">
         {/* Profile header */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <img
-              src={profile.avatarUrl}
-              alt={`${profile.username} avatar`}
-              className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-100"
-            />
-            <div className="text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-bold">
-                {profile.username}
-              </h1>
-              <p className="text-gray-600 mt-1">{profile.email}</p>
-              <p className="mt-3 text-gray-700">{profile.bio}</p>
-              <p className="text-sm text-gray-500 mt-2">
-                Since {new Date(profile.createdAt).toLocaleDateString()}
-              </p>
+          <div className="flex flex-col sm:flex-row items-center gap-6 justify-between">
+            <div className="flex flex-col sm:flex-row gap-6">
+              <img
+                src={profile.avatarUrl}
+                alt={`${profile.username} avatar`}
+                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-100"
+              />
+              <div className="text-center sm:text-left ">
+                <h1 className="text-2xl sm:text-3xl font-bold">
+                  {profile.username}
+                </h1>
+                <p className="mt-3 text-gray-700">{profile.bio}</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Since {new Date(profile.createdAt).toLocaleDateString()}
+                </p>
+              </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                console.log("Кнопка нажата, dialogRef:", dialogRef.current);
-                if (dialogRef.current) {
-                  dialogRef.current.showModal();
-                } else {
-                  console.error(
-                    "dialogRef.current is null — модалка не найдена в DOM",
-                  );
-                }
-              }}
-              className="ml-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Edit Profile
-            </button>
+            <div className="grid grid-cols-1 gap-y-4">
+              <button
+                type="button"
+                onClick={() => {
+                  if (dialogRef.current) {
+                    dialogRef.current.showModal();
+                  } else {
+                    console.error("dialogRef.current is null");
+                  }
+                }}
+                className="ml-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Edit Profile
+              </button>
+              <ButtonLogOut />
+            </div>
 
             <EditProfileDialog
+              key={`${profile.id}-${profile.username}-${profile.bio}-${profile.avatarUrl}`}
               ref={dialogRef}
               initialData={{
-                username: profile != undefined ? profile.username : "",
-                bio: profile != undefined ? profile.bio : "",
+                username: profile.username,
+                bio: profile.bio,
                 avatarUrl: profile.avatarUrl,
               }}
               onSave={handleSave}
@@ -193,8 +205,6 @@ export default function Profile() {
             )}
           </div>
 
-          <ButtonLogOut />
-
           {/* Tab content */}
           {activeTab === "posts" && (
             <div className="p-4 sm:p-6 space-y-6 min-h-[300px]">
@@ -213,7 +223,6 @@ export default function Profile() {
               )}
             </div>
           )}
-          <ButtonLogOut />
 
           {/* Create tab content */}
           {activeTab === "Create" && (
