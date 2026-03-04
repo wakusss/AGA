@@ -26,8 +26,8 @@ data class CreatePostDto(
 
 data class UpdatePostDto(
     val id:Long,
-    val content:String,
-    val imageUrl:String,
+    val content:String = "",
+    val imageUrl:String = "",
 
 )
 
