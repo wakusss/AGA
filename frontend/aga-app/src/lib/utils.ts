@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import api from "./api";
 import { useAuthStore } from "@/stores/authStore";
 import { on } from "events";
+import type { Post } from "@/components/types/Post";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -193,6 +194,7 @@ export const updateCurrentUserProfile = async ({
     console.error("PATCH /users/me error:", err);
   }
 };
+
 export const createPost = async ({
   postData,
   onError,
@@ -220,6 +222,15 @@ export const createPost = async ({
     if (err instanceof Error) onError?.(err.message);
   }
 };
+
+export const deletePost = async (postId: string | number) => {
+  try {
+    const res = await api.delete(`posts/${postId}`);
+    return res;
+  } catch (err: any) {
+    throw err;
+  }
+}
 
 export const getComments = async (
   postId: number,
@@ -281,5 +292,101 @@ export const addComment = async (
     if (err instanceof Error) onError?.(err.message);
   } finally {
     onLoading?.(false);
+  }
+};
+
+export const fetchAllPosts = async ({
+  onError,
+  onLoading,
+  onSuccess,
+}: {
+  onError?: (message: string) => void;
+  onLoading?: (isLoading: boolean) => void;
+  onSuccess?: (posts: any[]) => void; 
+}) => {
+  onLoading?.(true);
+
+  try {
+
+    const response = await api.get('/posts');
+
+    if (response.status === 200) {
+      let posts = response.data;
+
+
+      if (posts && Array.isArray(posts.content)) {
+        posts = posts.content;
+      }
+
+     
+      posts = posts.map((post: any) => ({
+        ...post,
+        createdAt: new Date(post.createdAt),
+      }));
+
+      onSuccess?.(posts);
+    } else {
+      throw new Error(`Unexpected status: ${response.status}`);
+    }
+  } catch (err: any) {
+    let message = 'Failed to load posts';
+
+    if (err.response) {
+      const status = err.response.status;
+      if (status === 401) message = 'Unauthorized. Please log in.';
+      else if (status === 500) message = 'Server error (500). Check backend logs.';
+      else message = `Error ${status}`;
+
+    
+      console.error('Server response body:', err.response.data);
+    } else if (err.request) {
+      message = 'No response from server. Is backend running?';
+    } else {
+      message = err.message || 'Unknown error';
+    }
+
+    onError?.(message);
+    console.error('fetchAllPosts failed:', err);
+  } finally {
+    onLoading?.(false);
+  }
+};
+interface UpdatePostData {
+  content: string;
+  imageUrl?: string | null;
+}
+
+export const updatePost = async (
+  postId: string,
+  data: UpdatePostData,
+  onSuccess?: (updated: Post) => void,
+  onError?: (msg: string) => void
+): Promise<Post | null> => {
+  try {
+    const payload: any = { content: data.content.trim() };
+
+    if (data.imageUrl !== undefined) {
+      payload.imageUrl = data.imageUrl || null;
+    }
+
+    const response = await api.patch<Post>(`/posts/${postId}`, payload, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (response.status === 200) {
+      onSuccess?.(response.data);
+      return response.data;
+    }
+
+    throw new Error(`Unexpected status: ${response.status}`);
+  } catch (err: any) {
+    const message =
+      err.response?.data?.message ||
+      err.message ||
+      "Failed to update post";
+
+    onError?.(message);
+    console.error(`PATCH /posts/${postId} failed:`, err);
+    return null;
   }
 };
