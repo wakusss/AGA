@@ -62,9 +62,9 @@ class SecurityConfig(
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
-                it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Preflight
+                it.requestMatchers( "/**").permitAll()  // Preflight
                     .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
-                    .anyRequest().authenticated()  // ← Было permitAll() — вернул authenticated
+                    .anyRequest().permitAll()
             }
             .addFilterBefore(JwtAuthenticationFilter(jwtService, userDetailsService()),
                 UsernamePasswordAuthenticationFilter::class.java)
