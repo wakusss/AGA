@@ -54,7 +54,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val config = CorsConfiguration().apply {
-            allowedOriginPatterns = listOf("http://localhost:5173", "http://127.0.0.1:5173")  // ← ЛОКАЛЬНЫЙ ФРОНТ
+            allowedOriginPatterns = listOf("http://localhost:5173", "http://127.0.0.1:5173", "https://aga-frontend.onrender.com")
             allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
             allowedHeaders = listOf("*")
             allowCredentials = true
