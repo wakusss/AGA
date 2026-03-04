@@ -10,6 +10,6 @@ interface LikeRepository : JpaRepository<UserPostLike, Long> {
     fun existsByUserIdAndPostId(userId: Long, postId: Long): Boolean
     fun countByPostAndLikedTrue(post: Post): Long
     fun findByUserAndPost(user: User, post: Post): UserPostLike?
-    fun deleteByPostId(postId: Long?)
+    fun deleteAllByPostId(postId: Long?)
 
 }

@@ -4,6 +4,7 @@ import com.aga.agaChat.models.dto.*
 import com.aga.agaChat.models.entity.Post
 import com.aga.agaChat.models.entity.User
 import com.aga.agaChat.models.entity.UserPostLike
+import com.aga.agaChat.repository.CommentRepository
 import com.aga.agaChat.repository.LikeRepository
 import com.aga.agaChat.repository.PostRepository
 import com.aga.agaChat.repository.UserRepository
@@ -29,6 +30,7 @@ class PostServiceImpl(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
     private val likeRepository: LikeRepository,
+    private val commentRepository: CommentRepository,
 ): PostService {
 
     override fun getPosts(
@@ -172,7 +174,10 @@ class PostServiceImpl(
         if (post.user.id != currentUser.id) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this post")
         }
-        likeRepository.deleteByPostId(post.id)
+
+        likeRepository.deleteAllByPostId(post.id)
+        commentRepository.deleteAllByPostId(post.id)
+
         postRepository.deleteById(id)
 
         return ResponseEntity.noContent().build()
