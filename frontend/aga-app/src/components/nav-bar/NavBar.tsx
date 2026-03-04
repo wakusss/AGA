@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TopNavTabs from "./TopNavTabs";
 import HamburgerMenuTabs from "./HamburgerMenuTabs";
+import logoSrc from "@/assets/logo.jpg";
 
 export default function NavBar() {
   const [isOpenHamburgerMenuButton, setIsOpenHamburgerMenuButton] =
@@ -14,7 +15,7 @@ export default function NavBar() {
             <div className="mr-[10%] items-baseline">
               <a href="/feed">
                 <img
-                  src="../../src/assets/logo.jpg"
+                  src={logoSrc}
                   alt="AGA Chat Logo"
                   className="h-10 sm:h-14 lg:h-auto w-auto object-contain shrink-0 max-w-[220px]"
                 />

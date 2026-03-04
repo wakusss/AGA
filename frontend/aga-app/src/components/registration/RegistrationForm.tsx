@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { validateEmail, validatePassword } from "../../lib/validation";
 import InputLogin from "../ui/InputLogin";
 import InputPassword from "../ui/InputPassword";
@@ -9,6 +9,7 @@ import ErrorMessage from "../widgets/ErrorMessage";
 import { useAuthStore } from "@/stores/authStore";
 import { useNavigate } from "react-router-dom";
 import { handleSubmitRegisterData } from "@/lib/utils";
+import logoSrc from "@/assets/logo.jpg";
 
 export default function RegistrationForm() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -95,7 +96,7 @@ export default function RegistrationForm() {
   return (
     <>
       <img
-        src="../../src/assets/logo.jpg"
+        src={logoSrc}
         alt="AGA Chat Logo"
         className="h-10 sm:h-14 lg:h-auto w-auto object-contain shrink-0 max-w-[220px]"
       />

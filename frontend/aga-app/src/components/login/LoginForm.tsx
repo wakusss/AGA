@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import InputEmail from "../../components/ui/InputEmail";
@@ -6,6 +6,7 @@ import InputPassword from "../../components/ui/InputPassword";
 import ButtonSignIn from "../ui/ButtonSignIn";
 import ErrorMessage from "../widgets/ErrorMessage";
 import { useAuthStore } from "@/stores/authStore";
+import logoSrc from "@/assets/logo.jpg";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -34,7 +35,7 @@ export default function LoginForm() {
   return (
     <>
       <img
-        src="../../src/assets/logo.jpg"
+        src={logoSrc}
         alt="AGA Chat Logo"
         className="h-10 sm:h-14 lg:h-auto w-auto object-contain shrink-0 max-w-[220px]"
       />
