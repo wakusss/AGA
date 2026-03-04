@@ -126,6 +126,9 @@ components:
     PostUpdateRequest:
       type: object
       properties:
+        id:
+          type: integer
+          nullable: false
         content:
           type: string
           maxLength: 2000
@@ -422,7 +425,27 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
+    patch:
+      tags: [Posts]
+      summary: Update own post
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUpdateRequest'
+      responses:
+        '200':
+          description: Post updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /posts/{id}:
     get:
       tags: [Posts]
@@ -443,35 +466,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PostResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
-
-    patch:
-      tags: [Posts]
-      summary: Update own post
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PostUpdateRequest'
-      responses:
-        '200':
-          description: Post updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostResponse'
-        '403':
-          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
 
