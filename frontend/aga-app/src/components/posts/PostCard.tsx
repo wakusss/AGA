@@ -43,12 +43,12 @@ export default function PostCard({
   const toggleComments = () => {
     setShowComments((prev) => !prev);
   };
-  const fallbackAvatar = "https://placehold.co/64x64?text=Нет+фото"; // или 80x80, или просто /64
+  const fallbackAvatar = "https://placehold.co/64x64";
 
   const avatarUrl = post.author.avatarUrl
     ? post.author.avatarUrl.startsWith("http")
       ? post.author.avatarUrl
-      : `https://api.твой-сайт.ru${post.author.avatarUrl}` // ← подставь реальный базовый URL
+      : `${post.author.avatarUrl}`
     : fallbackAvatar;
 
   const handleShare = async () => {

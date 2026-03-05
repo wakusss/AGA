@@ -49,7 +49,7 @@ export default function SmartSearchBar() {
         height: "80px",
       }}
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+      <div className="mt-3 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
         <div className="relative w-full">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
             <svg

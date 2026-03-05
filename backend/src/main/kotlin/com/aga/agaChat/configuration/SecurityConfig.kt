@@ -44,7 +44,7 @@ class SecurityConfig(
             allowedOriginPatterns = listOf(
                 "http://localhost:5173",           // Vite dev
                 "http://localhost:3000",           // CRA dev
-                "https://aga-frontend.onrender.com" // Прод фронт
+                "https://aga-frontend.onrender.com" // Render
             )
             allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
             allowedHeaders = listOf("*")

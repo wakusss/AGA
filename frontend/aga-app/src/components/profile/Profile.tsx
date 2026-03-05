@@ -52,6 +52,8 @@ export default function Profile() {
 
   useEffect(() => {
     // Posts
+    if (!profile.id) return;
+        setPostsError(null);
     fetchPosts({
       userId: profile.id,
       onLoading: setPostsLoading,

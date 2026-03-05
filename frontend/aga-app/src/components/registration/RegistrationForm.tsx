@@ -123,7 +123,7 @@ export default function RegistrationForm() {
       />
       {errorMsg && <ErrorMessage message={errorMsg} type="error" />}
       {isSuccess && (
-        <ErrorMessage message={"Sign In completed!"} type="success" />
+        <ErrorMessage message={"Sign Up completed!"} type="success" />
       )}
     </>
   );
