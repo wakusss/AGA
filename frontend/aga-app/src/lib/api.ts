@@ -1,7 +1,8 @@
 import axios from "axios";
+import { apiUrl } from "@/lib/config.ts";
 
 const api = axios.create({
-  baseURL: "https://aga-ifpq.onrender.com/api",
+  baseURL: apiUrl,
   headers: { "Content-Type": "application/json" },
 });
 
